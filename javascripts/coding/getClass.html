@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>获取Class</title>
+	<script>
+		function getClss(parent,className){
+			var all = parent.getElementsByTagName('*');
+			var arr = [];
+			for (var i = 0; i < all.length; i++) {
+				if (all[i].className == className) {
+					arr.push(all[i]);
+				}
+			}
+			return arr;
+		}
+		window.onload = function(){
+			var ul = document.getElementById('ul1');
+			var box = getClss(ul,'box');
+
+			for (var i = 0; i < box.length; i++) {
+				box[i].style.background = 'red';
+			}
+		}
+	</script>
+</head>
+<body>
+	<ul id="ul1">
+		<li></li>
+		<li></li>
+		<li class="box"></li>
+		<li></li>
+		<li></li>
+	</ul>
+</body>
+</html>

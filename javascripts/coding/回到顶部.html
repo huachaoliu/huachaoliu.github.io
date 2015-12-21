@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>回到顶部</title>
+	<style>
+		#box{width: 80px;height: 30px;line-height: 30px;border: 1px solid #333;background: #BDD6C3;text-align: center;cursor: pointer;position: fixed;right: 10px;bottom: 20px;display: none;}
+		#box:hover{color: #fff;background: #f40;}
+	</style>
+	<script>
+		window.onload = function(){
+			var btn = document.getElementById('box');
+			var go = true;
+			var timer = null;
+
+			window.onscroll = function(){
+				btn.style.display = 'block';
+				if (!go) {
+					clearInterval(timer);
+				}
+				go = false;
+				var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+				if (scrollTop == 0) {
+					btn.style.display = 'none';
+				}
+			}
+
+			btn.onclick = function(){
+				timer = setInterval(function(){
+					var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+					var speed = Math.floor(-scrollTop/12);
+
+					if (scrollTop == 0) {
+						clearInterval(timer);
+					}
+					go = true;
+					document.body.scrollTop = document.documentElement.scrollTop = scrollTop + speed;
+				},30);
+			}
+		}
+	</script>
+</head>
+<body style="height: 5000px;">
+	<div id="box">回到顶部</div>
+</body>
+</html>

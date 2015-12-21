@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>无缝滚动</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		li{list-style: none;width: 160px;height: 150px;float: left;text-align: center;}
+		img,a{display: block;text-align: center;}
+		.roll{width: 800px;height: 150px;margin: 0 auto;position: relative;top:200px;}
+		.left,.right{width: 68px;height: 68px; position: absolute;top:50px;z-index: 10;}
+		.left{left: 0;background: url(img/marquee/btn.jpg) no-repeat right top;}
+		.left:hover{background-position: right bottom;}
+		.right{right: 0;background: url(img/marquee/btn.jpg) no-repeat left top;}
+		.right:hover{background-position: left bottom;}
+		.content{width: 640px;height: 150px;margin: 0 auto;position: relative;overflow:hidden;}
+		.roll ul { position: absolute; top: 0; left: -160px; }
+		.roll li a:hover{position: relative; top: 2px;}
+	</style>
+	<script>
+		window.onload = function(){
+			var ul = document.getElementById('roll').getElementsByTagName('ul')[0],
+				li = ul.getElementsByTagName('li'),
+				a = document.getElementsByTagName('a'),
+				speed;
+				speedleft = -160,
+				speedright = 160,
+			ul.innerHTML += ul.innerHTML;
+			ul.style.width = li[0].offsetWidth*li.length+'px';
+			a[0].onclick = function(){
+				// speed = speedleft;
+				move(ul,speedleft);
+			}
+			a[1].onclick = function(){
+				// speed = speedright;
+				move(ul,speedright);
+			}
+		}
+		function move(str,target){
+				if (str.offsetLeft <= -str.offsetWidth/2) {
+					str.style.left = '0px';
+				}else if (str.offsetLeft >= 0){
+					str.style.left =  -str.offsetWidth/2 + 'px';
+				}
+				str.style.left = str.offsetLeft + target + 'px';
+			}
+	</script>
+</head>
+<body>
+	<div class="roll" id="roll">
+		<a href="javascript:void(0)" class="left"></a>
+		<a href="javascript:void(0)" class="right"></a>
+		<div class="content">
+			<ul>
+				<li><a href=""><img src="img/marquee/a.jpg" alt="1"></a></li>
+				<li><a href=""><img src="img/marquee/b.jpg" alt="2"></a></li>
+				<li><a href=""><img src="img/marquee/c.jpg" alt="3"></a></li>
+				<li><a href=""><img src="img/marquee/d.jpg" alt="4"></a></li>
+				<li><a href=""><img src="img/marquee/e.jpg" alt="5"></a></li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

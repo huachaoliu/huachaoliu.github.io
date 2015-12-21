@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>求和</title>
+	<style>
+		.body{width: 500px;margin: 0 auto;text-align: center;margin-top: 50px;}
+		input{width: 50px;}
+	</style>
+	<script>
+		window.onload = function(){
+			var input = document.getElementsByTagName('input'),
+				btn = document.getElementById('btn'),
+				span = document.getElementById('box');
+
+			btn.onclick = function(){
+				var sum = toSum(input[0],input[1]);
+				if (!isNaN(sum)) {
+					span.innerHTML = toSum(input[0],input[1]);
+				}else{
+					alert('您输入的信息有误，请重新输入！');
+				}
+			}
+		}
+		function toSum(a,b){
+			return parseInt(a.value) + parseInt(b.value);
+		}
+	</script>
+</head>
+<body>
+	<div class="body">
+		<input type="text" id="txt1">
+		<span>+</span>
+		<input type="text" id="txt2">
+		<span id="box">?</span>
+		<input type="button" id="btn" value="求和">
+	</div>
+</body>
+</html>

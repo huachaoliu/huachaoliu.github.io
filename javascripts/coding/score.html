@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>评分</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		body{padding-top: 20px;}
+		li{list-style: none;width: 27px;height: 27px;background: url(img/score/star.gif) no-repeat left top;display: inline-block;}
+		#rank{width: 200px;height: 80px;margin: 0 auto;text-align: center;}
+		.active{background-position: left bottom;}
+		ul{width: 200px;height: 30px;text-align: center;}
+		p{width: 150px;height: 30px;line-height: 30px;font-size: 24px;text-align: center;margin: 0 auto;margin-top: 10px;border: 1px solid #aaa;border-radius: 5px;display: none;}
+	</style>
+	<script>
+		var arr = ['很差','较差','一般','推荐','力荐'];
+		window.onload = function(){
+			var rank = document.getElementById('rank'),
+				li = document.getElementsByTagName('li'),
+				p = document.getElementsByTagName('p')[0];
+
+				for (var i = 0; i < li.length; i++) {
+					li[i].index = i;
+					li[i].onmouseover = function(){
+						p.style.display = 'block';
+						p.innerHTML = arr[this.index];
+						for (var i = 0; i < this.index+1; i++) {
+							li[i].className = 'active';
+						}
+					}
+					li[i].onmouseout = function(){
+						p.style.display = 'none';
+						for (var i = 0; i < li.length; i++) {
+							li[i].className = '';
+						}
+					}
+					li[i].onclick = function(){
+						alert('评分成功,'+(this.index+1)+'分');
+					}
+				}
+		}
+	</script>
+</head>
+<body>
+	<div id="rank">
+		<ul>
+			<li class="active"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+		<p>一般</p>
+	</div>
+</body>
+</html>

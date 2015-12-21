@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>播放列表的收缩展开</title>
+	<style type="text/css">
+		*{margin: 0;padding: 0;}
+		li{list-style: none;}
+		a{color: #666;text-decoration: none;}
+		body{background: #f6f9fc;padding-top: 50px;font-size: 12px;}
+		.down-list{width: 200px;border: 1px solid #aab4bc;margin: 0 auto;background: #AADFDA;}
+		.up{font-weight: normal;color: #333; border-bottom: 1px solid #eee; padding: 5px 0;text-indent: 10px;cursor:pointer;background: url(img/toggle/up.gif) no-repeat 90% center;}
+		.down{font-weight: normal;color: #333; border-bottom: 1px solid #eee; padding: 5px 0;text-indent: 10px;cursor: pointer;background: url(img/toggle/down.gif) no-repeat 90% center;}
+		.down-list ul{display: none;}
+		.down-list li{line-height: 12px;text-indent: 10px;}
+		.down-list a{display: block;padding: 8px 0;}
+		.down-list a:hover{background: #fff;text-decoration: underline;}
+	</style>
+	<script type="text/javascript">
+		window.onload = function(){
+			var drop = document.getElementById('drop'),
+				H2 = drop.getElementsByTagName('h2')[0],
+				Ul = drop.getElementsByTagName('ul')[0];
+			H2.onclick = function(e){
+				var e = e || event;
+				if (Ul.style.display == 'block') {
+					Ul.style.display = 'none';
+					H2.className = 'up';
+				}else{
+					Ul.style.display = 'block';
+					H2.className = 'down';
+				}
+				e.cancelBubble = true;
+			}
+			document.onclick = function(){
+				Ul.style.display = 'none';
+				H2.className = 'up';
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="drop" class="down-list">
+		<h2 class="up">播放列表</h2>
+		<ul>
+			<li><a href="#">玩爱之徒 - 蔡依林</a></li>
+	        <li><a href="#">原谅我就是这样的女生 - 戴佩妮</a></li>
+	        <li><a href="#">猜不透 - 丁当</a></li>
+	        <li><a href="#">自导自演 - 周杰伦</a></li>
+	        <li><a href="#">浪漫窝 - 弦子</a></li>
+	        <li><a href="#">流年 - 王非</a></li>
+		</ul>
+	</div>
+</body>
+</html>

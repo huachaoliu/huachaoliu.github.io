@@ -1,0 +1,24 @@
+@charset "utf-8";
+/* reset.css 样式重置*/
+body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,img,div,dl,dt,dd,input{margin: 0;padding: 0;}
+h1,h2,h3,h4,h5,h6{font-weight:normal;font-family:'宋体';}
+body{font-size: 12px;font-family:'宋体';}
+img{border: none;}
+li{list-style-type: none;}
+input,select,textarea{outline: none;background:none;border:none;}
+textarea{resize: none;}
+a{text-decoration: none;color: #666;}
+a:hover{color:#f69;}
+
+/*清浮动*/
+.clearfix:after{
+	content: "";display: block;clear: both;
+}
+.clearfix{zoom:1;}
+
+.fl {float: left;}
+.fr {float: right;}
+
+.con {width: 1200px;margin: 0 auto;}
+a.pinka {color:#f69;}
+#main{width: 1200px;margin: 0 auto; position:relative;}

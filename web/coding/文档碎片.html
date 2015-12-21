@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>文档碎片</title>
+</head>
+<script>
+	window.onload = function(){
+		var btn = document.getElementById('btn');
+		var ul = document.getElementById('ul');
+
+		btn.onclick = function(){
+			var start = new Date().getTime();
+			for (var i = 0; i < 100000; i++) {
+				var li = document.createElement('li');
+				ul.appendChild(li);
+			}
+			alert(new Date().getTime()-start);
+		}
+	}
+</script>
+<body>
+	<input id="btn" type="button" value="创建">
+	<ul id="ul"></ul>
+</body>
+</html>
