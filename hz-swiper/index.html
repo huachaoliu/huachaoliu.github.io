@@ -2,9 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>swiper</title>
+    <link rel="stylesheet" href="./css/swiper.css">
+    <script src="./js/jquery-1.9.1.min.js"></script>
+    <script src="./js/swiper.js"></script>
+    <script>
+        $(function () {
+            $('.swiper').swiper({
+                len: 3,
+                speed: 4000
+            });     
+        });
+    </script>
 </head>
 <body>
-    
+    <div class="swiper">
+        <div class="swiper-btn swiper-btn-prev"><</div>        
+        <div class="swiper-btn swiper-btn-next">></div>        
+        <div class="swiper-list">
+            <div class="swiper-list-node"></div>
+            <div class="swiper-list-node"></div>
+            <div class="swiper-list-node"></div>            
+        </div>
+        <div class="swiper-index">
+            <div class="swiper-index-child swiper-active"></div>
+            <div class="swiper-index-child"></div>
+            <div class="swiper-index-child"></div>            
+        </div>
+    </div>
 </body>
 </html>
