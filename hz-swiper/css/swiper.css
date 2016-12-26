@@ -29,11 +29,11 @@
 }
 
 .swiper-list-node:nth-child(3) {
-    background: #fad;
+    background: #787878;
 }
 
 .swiper-list-node:nth-child(4) {
-    background: #dea;
+    background: #787878;
 }
 
 .swiper-btn{
@@ -75,7 +75,7 @@
     border-radius: 50%;
     display: inline-block;
     margin: 0 5px;
-    background: rgba(155,155,155,.2);
+    background: rgba(220,220,220,.9);
     cursor: pointer;
 }
 
@@ -85,9 +85,9 @@
 }
 
 .swiper-active{
-    background: #fad;
+    background: #0b5a8c;
 }
 
 .swiper-active:hover {
-    background: #fad;
+    background: #0b5a8c;
 }
