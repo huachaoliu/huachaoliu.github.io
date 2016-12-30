@@ -7,7 +7,9 @@
 })(function ($) {
     var Swiper = function (options) {
         //plugins style
+        //TODO: 可配置的ui。
         var stype = ['slider', 'gradient'];
+        var swiper_ui = {};
         var defaults = {
             n: 0,
             timer: null,
@@ -159,7 +161,6 @@
         }
     }
     $.fn.swiper = function (options) {
-        var _this = $(this);
         return new Swiper(options);
     };
 });
