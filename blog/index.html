@@ -4,8 +4,19 @@
     <meta charset="UTF-8">
     <title>个人博客</title>
     <link rel="stylesheet" href="./css/style.css">
-    <script src="./js/jquery-1.9.1.min.js"></script>    
+    <link rel="stylesheet" href="./css/swiper.css">
+    <script src="./js/jquery-1.9.1.min.js"></script>
+    <script src="./js/swiper.js"></script>    
     <script src="./js/common.js"></script>
+    <script>
+        $(function () {
+            $('.swiper').swiper({
+                len: 3,
+                speed: 4000,
+                height: $(window).height() - 80
+            });     
+        });
+    </script>
 </head>
 <body>
     <div class="toolbar">
@@ -17,10 +28,28 @@
     </div>
     <div class="wrap">
         <div class="page page1">
-            aaa
+            <div class="swiper">
+                <div class="swiper-btn swiper-btn-prev"><</div>        
+                <div class="swiper-btn swiper-btn-next">></div>        
+                <div class="swiper-list">
+                    <div class="swiper-list-node">
+                        <img src="./img/banner1.jpg" alt="">
+                    </div>
+                    <div class="swiper-list-node">
+                        <img src="./img/banner2.jpg" alt="">                        
+                    </div>
+                    <div class="swiper-list-node">
+                        <img src="./img/banner3.jpg" alt="">                        
+                    </div>            
+                </div>
+                <div class="swiper-index">
+                    <div class="swiper-index-child swiper-active"></div>
+                    <div class="swiper-index-child"></div>
+                    <div class="swiper-index-child"></div>            
+                </div>
+            </div>
         </div>
         <div class="page page2">
-            bbb
         </div>
     </div>
     <div class="foot"></div>

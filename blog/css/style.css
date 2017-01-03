@@ -48,7 +48,7 @@ body{
 }
 
 .cicle.active{
-    border-color: #666;
+    border-color: #0742ff;
 }
 
 .cicle:nth-child(2) {
@@ -59,7 +59,7 @@ body{
     height: 80px;
     width: 100%;
     background: #fbfbfb;
-    box-shadow: 0 0 15px #000;
+    box-shadow: 0 0 15px rgba(0,0,0,.3);
     position: fixed;
     left: 0;
     top: 0;
@@ -95,5 +95,5 @@ body{
 }
 
 .page2{
-    background: #0feacd;
+    background: #ddd;
 }
