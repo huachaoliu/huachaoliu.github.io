@@ -37,9 +37,8 @@ full page and page controll
 
 ```js
     {
-        height: 1000,
+        count: 1,        
         container: container, //容器
-        count: 1,
-        controll: false,
+        controll: false
     }
 ```

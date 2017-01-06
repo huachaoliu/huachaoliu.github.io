@@ -57,7 +57,6 @@
             $(window).on('mousewheel', function (e) {
                 var delta = e.originalEvent.deltaY;
                 _this_.pageMove(opt, delta);
-                var cicle = $('.cicle');
             });
         },
         domMouseScrollFrifox: function (opt) {
