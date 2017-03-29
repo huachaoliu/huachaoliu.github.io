@@ -3,10 +3,15 @@
   "version": "1.0.0",
   "description": "one blogs",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "serve-static": "^1.11.1"
+  },
   "devDependencies": {},
   "scripts": {
     "start": "cd src/ && python -m SimpleHTTPServer 10000",
+    "dev-win": "node src/server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
