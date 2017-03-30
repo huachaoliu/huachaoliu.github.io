@@ -2,15 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>misliu的静态博客</title>
-    <link rel="stylesheet" href="/static/css/style.css">                    
-    <script src="/static/js/UI.js"></script>
+    <title>我只是一个散漫的码农</title>
+    <link class="target" rel="stylesheet" href="/static/css/reset.css">
+    <link class="target" rel="stylesheet" href="/static/css/style.css">
+    <script class="target" src="/static/js/ajax.js"></script>
+    <script class="target" id="script" src="/static/js/UI.js"></script>
+    <script class="target" src="/static/js/signals.min.js"></script>
+    <script class="target" src="/static/js/Container.js"></script>
+    <script class="target" src="/static/js/Navbar.js"></script>   
+    <script class="target" src="/static/js/layout/Wrapper.js"></script> 
+    <script class="target" src="/static/js/layout/Navigation.js"></script>
+    <script class="target" src="/static/js/layout/Menubar.js"></script>
+    <script class="target" src="/static/js/Sidebar.js"></script>
+    <script class="target" src="/static/js/Content.js"></script>
+    <script class="target" src="/static/js/layout/Article.js"></script>
+    <script>
+        (function () {
+            
+            var host = location.host;
+            var targets = document.getElementsByClassName('target');
+                        
+            // if (host.indexOf("misliu.github.io") !== -1) {
+                for (var i = 0, l = targets.length; i < l; i++) {
+                    
+                    var tag = targets[i].href || targets[i].src;
+                    console.log(tag);
+                    var href = location.host;
+                    
+
+                    tag = tag.replace(/static/, './static/');
+                    console.log(tag);                    
+                    if (targets[i].href) targets[i].href = tag;
+
+                    if (targets[i].src) targets[i].src = tag;
+
+                    console.log(targets[i]);
+                }
+                
+        })();
+    </script>
 </head>
 <body>
     <script>
-        var nav = new UI.Div();
-        nav.setClass('navbar');
-        document.body.appendChild(nav.dom);
+        var container = new Container();
+        
+        var navbar = new Navbar(container);
+        document.body.appendChild(navbar.dom);
+        
+        var sidebar = new Sidebar(container);
+
+        var content = new Content(container);
+
+        setTimeout(function () {
+            navbar.addClass('onleft');
+            document.body.appendChild(sidebar.dom);
+            document.body.appendChild(content.dom);
+        }, 1500);
 
     </script>
 </body>
