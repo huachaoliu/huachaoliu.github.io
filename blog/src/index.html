@@ -30,8 +30,7 @@
                     var href = location.host;
                     
 
-                    tag = tag.replace(/static/, './static//');
-                    console.log(tag);                    
+                    tag = tag.replace(/static/, '/blog/src/static/');
                     if (targets[i].href) targets[i].href = tag;
 
                     if (targets[i].src) targets[i].src = tag;
