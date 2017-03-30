@@ -20,7 +20,7 @@
         (function () {
             var host = location.host, html = null,
                 targets = document.getElementsByClassName('target');                        
-            if (host.indexOf("misliu.github.io") === -1) {
+            if (host.indexOf("misliu.github.io") !== -1) {
                 for (var i = 0; i < targets.length; i++) {
                     var attr = targets[i].getAttribute('href') || targets[i].getAttribute('src');
                     if (targets[i].href) targets[i].setAttribute('href', '.'+attr);
