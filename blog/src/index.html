@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>我只是一个散漫的码农</title>
-    <link class="target" rel="stylesheet" href="/static/css/reset.css">
+    <!--<link class="target" rel="stylesheet" href="/static/css/reset.css">
     <link class="target" rel="stylesheet" href="/static/css/style.css">
     <script class="target" src="/static/js/ajax.js"></script>
-    <script class="target" id="script" src="/static/js/UI.js"></script>
+    <script class="target" src="/static/js/UI.js"></script>
     <script class="target" src="/static/js/signals.min.js"></script>
     <script class="target" src="/static/js/Container.js"></script>
     <script class="target" src="/static/js/Navbar.js"></script>   
@@ -15,7 +15,21 @@
     <script class="target" src="/static/js/layout/Menubar.js"></script>
     <script class="target" src="/static/js/Sidebar.js"></script>
     <script class="target" src="/static/js/Content.js"></script>
-    <script class="target" src="/static/js/layout/Article.js"></script>
+    <script class="target" src="/static/js/layout/Article.js"></script>-->
+
+    <link class="target" rel="stylesheet" href="./static/css/reset.css">
+    <link class="target" rel="stylesheet" href="./static/css/style.css">
+    <script class="target" src="./static/js/ajax.js"></script>
+    <script class="target" src="./static/js/UI.js"></script>
+    <script class="target" src="./static/js/signals.min.js"></script>
+    <script class="target" src="./static/js/Container.js"></script>
+    <script class="target" src="./static/js/Navbar.js"></script>   
+    <script class="target" src="./static/js/layout/Wrapper.js"></script> 
+    <script class="target" src="./static/js/layout/Navigation.js"></script>
+    <script class="target" src="./static/js/layout/Menubar.js"></script>
+    <script class="target" src="./static/js/Sidebar.js"></script>
+    <script class="target" src="./static/js/Content.js"></script>
+    <script class="target" src="./static/js/layout/Article.js"></script>
     <script>
         (function () {
             
@@ -32,9 +46,9 @@
 
                     tag = tag.replace(/static/, './static/');
                     console.log(tag);                    
-                    // if (targets[i].href) targets[i].href = tag;
+                    if (targets[i].href) targets[i].href = tag;
 
-                    // if (targets[i].src) targets[i].src = tag;
+                    if (targets[i].src) targets[i].src = tag;
 
                     console.log(targets[i]);
                 }
