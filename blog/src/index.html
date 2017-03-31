@@ -17,6 +17,7 @@
     <script class="target" src="./static/js/layout/Menubar.js"></script>
     <script class="target" src="./static/js/Sidebar.js"></script>
     <script class="target" src="./static/js/Content.js"></script>
+    <script class="target" src="./static/js/Footer.js"></script>
     <script class="target" src="./static/js/pages/Home.js"></script>
     <script class="target" src="./static/js/layout/Article.js"></script>
 
@@ -38,6 +39,9 @@
 
         var content = new Content(container);
 
+        var footer = new Footer(container);
+
+
         setTimeout(function () {
 
             navbar.addClass('onleft');
@@ -45,6 +49,8 @@
             document.body.appendChild(sidebar.dom);
 
             document.body.appendChild(content.dom);
+
+            document.body.appendChild(footer.dom);            
 
         }, 1500);
 
@@ -62,6 +68,8 @@
 
                 content.removeClass('contentgoright').addClass('contentgoleft');
 
+                footer.removeClass('footerleft').addClass('footer');
+
             } else {
 
                 sidebar.addClass('hide');
@@ -69,6 +77,8 @@
                 navbar.removeClass('navbar').removeClass('onleft').addClass('toright');
 
                 content.removeClass('content').removeClass('contentgoleft').addClass('contentgoright');
+
+                footer.removeClass('footer').addClass('footerleft');
             }
         });
 

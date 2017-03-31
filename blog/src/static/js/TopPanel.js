@@ -4,7 +4,13 @@ var TopPanel = function (container) {
 
     var panel = new UI.Div().setClass('toppanel');
 
-    var goright = new UI.Button().setClass('goright').setText('X');
+    var goright = new UI.Button().setClass('goright');
+
+    goright.add(
+        new UI.Span(),
+        new UI.Span(),
+        new UI.Span()        
+    );
 
     var gotop = new UI.Button().setClass('gotop').setText('T');
 
