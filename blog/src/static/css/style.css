@@ -1,5 +1,32 @@
 body{
-    overflow: hidden;
+    /*overflow: hidden;*/
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;    
+}
+
+.toppanel{
+    width: 20px;
+    height: 46px;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.toppanel button {
+    border: none;
+    outline: none;
+    background: none;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    background: #555;
+    border-radius: 5px;
 }
 
 .wrapper{
@@ -59,7 +86,6 @@ body{
     width: 80px;
     font-size: 14px;
     cursor: pointer;
-    -webkit-user-select: none;
 }
 
 .menubar ul li:hover{
@@ -118,7 +144,7 @@ body{
     width: 300px;
     height: 100vh;
     background: #000;
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     transition: all .5s;
@@ -138,6 +164,77 @@ body{
     from {width: 300px;} to {width: 0;}
 }
 
+.sidetitle{
+    width: 200px;
+    height: 200px;
+    margin: 50px 50px 0;
+    color: #fff;
+    text-align: center;
+}
+
+.sidebar .headlogo{
+    width: 120px;
+    height: 120px;
+    display: block;
+    border-radius: 50%;
+    margin: 20px 40px;
+    border: 2px double;
+}
+
+.sidetags{
+    width: 160px;
+    height: 50px;
+    font-size: 14px;
+    margin: 0 70px;
+    color: #999;
+    font-weight: bold;
+    display: flex;
+}
+
+.sidetags .tag {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    border-right: 1px dotted #555;
+    height: 46px;
+    line-height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidetags .tag:last-child{
+    border-right: none;
+}
+
+.sidetags .tag:hover{
+    color: #aaa;
+}
+
+.sidetags .tag span{
+    
+}
+
+.wxpanel {
+    color: #fff;
+    width: 200px;
+    margin: 20px 50px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.wxpanel .title{
+    font-size: 16px;
+}
+
+.qrcode {
+    width: 140px;
+    height: 140px;
+    margin: 10px 30px;
+    border-radius: 10px;
+}
+
 .content {
     float: left;
     margin: 50px 0;
@@ -145,4 +242,20 @@ body{
     height: calc(100vh - 200px);
     animation: navChangeWidth .5s;
     overflow: auto;
+}
+
+.contentgoright{
+    width: 100%;
+    margin: 50px 0;    
+    float: left;
+    height: calc(100vh - 200px);        
+    animation: navToright .5s;
+}
+
+.contentgoleft {
+    width: calc(100vw - 300px);
+    margin: 50px 0;
+    float: left;
+    height: calc(100vh - 200px);
+    animation: navChangeWidth .5s;
 }

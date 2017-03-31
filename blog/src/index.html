@@ -9,6 +9,7 @@
     <script class="target" src="./static/js/UI.js"></script>
     <script class="target" src="./static/js/signals.min.js"></script>
     <script class="target" src="./static/js/Container.js"></script>
+    <script class="target" src="./static/js/TopPanel.js"></script>
     <script class="target" src="./static/js/Navbar.js"></script>
     <script class="target" src="./static/js/layout/Wrapper.js"></script>
     <script class="target" src="./static/js/layout/Navigation.js"></script>
@@ -21,6 +22,9 @@
 <body>
     <script>
         var container = new Container();
+
+        var topPanel = new TopPanel(container);
+        document.body.appendChild(topPanel.dom);
         
         var navbar = new Navbar(container);
         document.body.appendChild(navbar.dom);
@@ -30,10 +34,38 @@
         var content = new Content(container);
 
         setTimeout(function () {
+            
             navbar.addClass('onleft');
+            
             document.body.appendChild(sidebar.dom);
+            
             document.body.appendChild(content.dom);
+        
         }, 1500);
+
+        var signals = container.signals;
+
+        signals.changeShowOrFalse.add(function () {
+    
+            container.setShowOrFalse();
+    
+            if (container.showOrFalse) {
+    
+                sidebar.removeClass('hide');
+   
+                navbar.removeClass('toright').addClass('onleft');
+   
+                content.removeClass('contentgoright').addClass('contentgoleft');
+   
+             } else {
+
+                sidebar.addClass('hide');
+    
+                navbar.removeClass('navbar').removeClass('onleft').addClass('toright');
+    
+                content.removeClass('content').removeClass('contentgoleft').addClass('contentgoright');
+            }
+        });
 
     </script>
 </body>

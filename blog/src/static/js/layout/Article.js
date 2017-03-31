@@ -11,7 +11,13 @@ var Article = function (container) {
 
     article.setText('首页');
 
-    signals.menuItemClicked.add( function (obj) {
+    signals.menuItemClicked.add(function (obj) {
+
+        article.setText(obj.value);
+
+    });
+
+    signals.sideTagClicked.add(function (obj) {
 
         article.setText(obj.value);
 

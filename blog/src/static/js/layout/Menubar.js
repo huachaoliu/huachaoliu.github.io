@@ -1,5 +1,5 @@
 var Menubar = function (container, num) {
-    
+
     var menubar = new UI.Div();
 
     var signals = container.signals;
@@ -9,14 +9,14 @@ var Menubar = function (container, num) {
     var ul = new UI.Ul(), i = 0;
 
     var menuStack = [
-        {key: "home", value: "首页"}, 
-        {key: "done", value: "归档"}, 
-        {key: "category", value: "分类"}, 
-        {key: "help", value: "帮助"}, 
-        {key: "about", value: "关于"}
+        { key: "home", value: "首页" },
+        { key: "done", value: "归档" },
+        { key: "category", value: "分类" },
+        { key: "help", value: "帮助" },
+        { key: "about", value: "关于" }
     ];
 
-    while ( i < num ) {
+    while (i < num) {
 
         var navItem = new UI.Li().setText(menuStack[i].value);
 
@@ -27,13 +27,13 @@ var Menubar = function (container, num) {
             */
             var args = Array.prototype.slice.call(arguments)[0];
 
-            signals.menuItemClicked.dispatch(args[1][ args[2] ]);
+            signals.menuItemClicked.dispatch(args[1][args[2]]);
 
         }, menuStack, i);
 
-        ul.add( navItem );
+        ul.add(navItem);
         i++;
-    } 
+    }
 
     menubar.add(ul);
 

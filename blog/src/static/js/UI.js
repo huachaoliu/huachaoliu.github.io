@@ -199,6 +199,38 @@
 
     UI.Hr.prototype.contructor = UI.Hr;
 
+    UI.Image = function () {
+
+        UI.Element.call(this);
+
+        this.dom = document.createElement('img');
+
+        return this;
+
+    };
+
+    UI.Image.prototype = Object.create(UI.Element.prototype);
+    UI.Image.prototype.constructor = UI.Image;
+
+    UI.Image.prototype.setSrc = function (url) {
+        this.dom.src = url;
+
+        return this;
+    };
+
+    UI.Button = function () {
+
+        UI.Element.call(this);
+
+        this.dom = document.createElement('button');
+
+        return this;
+
+    };
+
+    UI.Button.prototype = Object.create(UI.Element.prototype);
+    UI.Button.prototype.constructor = UI.Button;
+
     window.UI = UI;
 
 })();
