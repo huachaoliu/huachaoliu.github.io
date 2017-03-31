@@ -10,7 +10,7 @@ var Sidebar = function (container) {
     headTitle.setClass('sidetitle');
 
     headTitle.add(
-        new UI.Image().setClass('headlogo').setSrc('/static/img/1.jpg'),
+        new UI.Image().setClass('headlogo').setSrc('./static/img/1.jpg'),
         new UI.Span().setText('我只是一只散漫的码农').setFontSize('16px')
     );
 
@@ -49,7 +49,7 @@ var Sidebar = function (container) {
 
     weixin.add(
         new UI.Span().setClass('title').setText('二维码'),
-        new UI.Image().setClass('qrcode').setSrc('/static/img/qrcode.jpg')
+        new UI.Image().setClass('qrcode').setSrc('./static/img/qrcode.jpg')
     )
 
     sidebar.add(
