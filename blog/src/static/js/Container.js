@@ -7,10 +7,13 @@ var Container = function () {
 
         changeShowOrFalse: new Signal(),
 
+        goTopChanged: new Signal(),
+
         sideTagClicked: new Signal()
     };
 
     this.showOrFalse = true;
+
 };
 
 Container.prototype = {

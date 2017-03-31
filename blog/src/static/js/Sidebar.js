@@ -3,6 +3,7 @@ var Sidebar = function (container) {
     var signals = container.signals;
 
     var sidebar = new UI.Div();
+    
     sidebar.setClass('sidebar');
 
     var headTitle = new UI.Div();
@@ -18,10 +19,24 @@ var Sidebar = function (container) {
 
     tags.setClass('sidetags');
 
+    var homeFiles = new HomeFiles();
+
+    var log = 0, category = 0, tag = 0;
+
+    for (var j = 0, len = homeFiles.length; j < len; j++) {
+        if (homeFiles[j].type === "log"){
+            log += 1;
+        } else if (homeFiles[j].type === "tag") {
+            tag += 1;
+        } else {
+            category += 1;
+        }
+    }
+
     var tagStack = [
-        { num: 20, value: '日志' },
-        { num: 10, value: '分类' },
-        { num: 2, value: '标签' }
+        { num: log, value: '日志' },
+        { num: category, value: '分类' },
+        { num: tag, value: '标签' }
     ];
 
     for (var i = 0; i < tagStack.length; i++) {

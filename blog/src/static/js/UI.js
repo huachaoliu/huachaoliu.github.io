@@ -231,6 +231,19 @@
     UI.Button.prototype = Object.create(UI.Element.prototype);
     UI.Button.prototype.constructor = UI.Button;
 
+    UI.H2 = function () {
+
+        UI.Element.call(this);
+
+        this.dom = document.createElement('h2');
+
+        return this;
+
+    };
+
+    UI.H2.prototype = Object.create(UI.Element.prototype);
+    UI.H2.prototype.constructor = UI.H2;
+
     window.UI = UI;
 
 })();

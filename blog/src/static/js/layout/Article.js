@@ -1,27 +1,43 @@
-var Article = function (container) {
+var Article = function (container, files) {
 
     var signals = container.signals;
 
     var article = new UI.Div().setClass('article');
 
-    /**
-     * @param: {article} 默认选中的值是首页
-     * @param: {object} obj - 选中的目标属性对象集合
-    */
+    var title = new UI.Div().setClass('title').add(
 
-    article.setText('首页');
+        new UI.H2().setText(files.title.h2),
 
-    signals.menuItemClicked.add(function (obj) {
+        new UI.Div().setClass('type').add(
 
-        article.setText(obj.value);
+            new UI.Span().setText(files.title.time),
 
-    });
+            new UI.Span().setText(files.title.author),
 
-    signals.sideTagClicked.add(function (obj) {
+            new UI.Span().setText(files.title.category)
 
-        article.setText(obj.value);
+        )
+    );
 
-    });
+    var setions =  new UI.Div().setClass('label')
+
+    for (var i = 0, l = files.tags.length; i < l; i++) {
+
+        var tag = new UI.H2().setText(files.tags[i].name);
+
+        var text = new UI.Div().setClass('text').setText(files.tags[i].text);
+
+        setions.add(tag, text);
+
+    }
+
+    var readAll = new UI.Button().setClass('readall').setText(files.button);
+
+    article.add(
+        title,
+        setions,
+        readAll
+    );
 
     return article;
 

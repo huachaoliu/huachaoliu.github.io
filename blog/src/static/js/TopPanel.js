@@ -12,6 +12,10 @@ var TopPanel = function (container) {
         signals.changeShowOrFalse.dispatch();
     });
 
+    gotop.onClick(function () {
+        signals.goTopChanged.dispatch();
+    });
+
     panel.add(
         goright,
         gotop

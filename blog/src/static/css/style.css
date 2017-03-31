@@ -6,6 +6,10 @@ body{
     user-select: none;    
 }
 
+h2 {
+    font-size: 24px;
+}
+
 .toppanel{
     width: 20px;
     height: 46px;
@@ -241,7 +245,6 @@ body{
     width: calc(100vw - 300px);
     height: calc(100vh - 200px);
     animation: navChangeWidth .5s;
-    overflow: auto;
 }
 
 .contentgoright{
@@ -250,6 +253,7 @@ body{
     float: left;
     height: calc(100vh - 200px);        
     animation: navToright .5s;
+    height: auto;
 }
 
 .contentgoleft {
@@ -258,4 +262,64 @@ body{
     float: left;
     height: calc(100vh - 200px);
     animation: navChangeWidth .5s;
+    height: auto;    
+}
+
+.content .wrapper,
+.contentgoright .wrapper,
+.contentgoleft .wrapper{
+    text-align: left;
+}
+
+.wrapper .home{
+    padding: 0 10px 0 70px;
+}
+
+.wrapper .home .article {
+    margin-bottom: 80px;
+}
+
+.wrapper .home .type span{
+    display: inline-block;
+    padding: 0 10px;
+    font-size: 14px;
+    height: 14px;
+    line-height: 14px;
+    color: #666;
+    border-right: 1px solid #999;
+    margin: 10px 0;
+}
+.wrapper .home .type span:first-child{
+    padding-left: 0;
+}
+.wrapper .home .type span:last-child{
+    border-right: none;
+}
+
+.wrapper .home .label h2{
+    font-size: 20px;
+    color: #333;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 16px;
+}
+
+.wrapper .home .label .text{
+    font-size: 14px;
+    line-height: 40px;
+    padding: 10px 0;
+}
+
+.wrapper .home .readall {
+    border: none;
+    outline: none;
+    background: #fff;
+    border-bottom: 2px solid #999;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.wrapper .home .readall::after{
+    content: "»"
 }

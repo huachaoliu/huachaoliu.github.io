@@ -6,13 +6,9 @@ var Content = function (container) {
 
     var wrapper = new Wrapper();
 
-    wrapper.add( new Article(container) );
+    wrapper.add( new Home(container) );
 
     content.add( wrapper );
-
-    // signals.menuItemClicked.add(function (value) {
-    //     content.setText(value);
-    // });
 
     return content;
 };
