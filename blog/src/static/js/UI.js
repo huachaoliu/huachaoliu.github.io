@@ -43,9 +43,16 @@
         },
 
         clear: function () {
+
             while (this.dom.children.length) {
+
                 this.dom.removeChild(this.dom.lastChild);
+
             }
+
+            this.dom.textContent = '';
+
+            return this;
         },
 
         setStyle: function (style, array) {

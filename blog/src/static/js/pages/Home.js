@@ -13,23 +13,31 @@ var Home = function (container) {
     //读取首页文档
     var homeFile = new HomeFiles();
 
-    for (var i = 0, l = homeFile.length; i < l; i++) {
+    function renderHome() {
+        for (var i = 0, l = homeFile.length; i < l; i++) {
 
-        home.add(new Article( container, homeFile[i] ));        
+            home.add(new Article(container, homeFile[i]));
 
+        }
     }
+
+    renderHome();
 
     signals.menuItemClicked.add(function (obj) {
 
-        // article.setText(obj.value);
-
-        // article.add( new Home(container) );
+        home.clear();        
+        
+        if (obj.key === 'home') {
+            renderHome();
+        } else {
+            home.setText(obj.value);            
+        }
 
     });
 
     signals.sideTagClicked.add(function (obj) {
 
-        // article.setText(obj.value);
+        home.clear().setText(obj.value);
 
     });
 
