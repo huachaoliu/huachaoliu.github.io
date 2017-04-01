@@ -23,10 +23,7 @@ var Menubar = function (container, num) {
         (function (i) {
 
             navItem.onClick(function () {
-            /**
-             * @param: {args}
-             *  [0: event, 1: menustack, 2: i];
-                */
+
                 signals.menuItemClicked.dispatch(menuStack[i]);
 
             });
@@ -34,6 +31,7 @@ var Menubar = function (container, num) {
         })(i);
 
         ul.add(navItem);
+        
         i++;
     }
 
