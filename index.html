@@ -64,21 +64,21 @@
 
                 sidebar.removeClass('hide');
 
-                navbar.removeClass('toright').addClass('onleft');
+                navbar.setClass('onleft');
 
-                content.removeClass('contentgoright').addClass('contentgoleft');
+                content.setClass('contentgoleft');
 
-                footer.removeClass('footerleft').addClass('footer');
+                footer.setClass('footer');
 
             } else {
 
                 sidebar.addClass('hide');
 
-                navbar.removeClass('navbar').removeClass('onleft').addClass('toright');
+                navbar.setClass('toright');
 
-                content.removeClass('content').removeClass('contentgoleft').addClass('contentgoright');
+                content.setClass('contentgoright');
 
-                footer.removeClass('footer').addClass('footerleft');
+                footer.setClass('footerleft');
             }
         });
 
