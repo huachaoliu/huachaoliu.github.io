@@ -1,8 +1,8 @@
-title: Misliu.GitHub.io
-description: 杀虫剂CSDN博客
-google_analytics: 
-show_downloads: true
-theme: jekyll-theme-cayman
+# title: Misliu.GitHub.io
+# description: 杀虫剂CSDN博客
+# google_analytics: 
+# show_downloads: true
+# theme: jekyll-theme-cayman
 
-gems:
-  - jekyll-mentions
+# gems:
+#   - jekyll-mentions
