@@ -10,7 +10,7 @@ var Menubar = function (container, num) {
 
     var menuStack = [
         { key: "home", value: "首页" },
-        { key: "done", value: "归档" },
+        { key: "done", value: "日志" },
         { key: "category", value: "分类" },
         { key: "help", value: "帮助" },
         { key: "about", value: "关于" }
@@ -19,17 +19,19 @@ var Menubar = function (container, num) {
     while (i < num) {
 
         var navItem = new UI.Li().setText(menuStack[i].value);
+        
+        (function (i) {
 
-        navItem.onClick(function () {
+            navItem.onClick(function () {
             /**
              * @param: {args}
              *  [0: event, 1: menustack, 2: i];
-            */
-            var args = Array.prototype.slice.call(arguments)[0];
+                */
+                signals.menuItemClicked.dispatch(menuStack[i]);
 
-            signals.menuItemClicked.dispatch(args[1][args[2]]);
+            });
 
-        }, menuStack, i);
+        })(i);
 
         ul.add(navItem);
         i++;

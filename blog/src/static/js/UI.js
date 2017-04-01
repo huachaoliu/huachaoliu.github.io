@@ -137,7 +137,7 @@
         var method = 'on' + event;
 
         UI.Element.prototype[method] = function (callback) {
-            this.dom.addEventListener(event.toLowerCase(), callback.bind(this, arguments), false);
+            this.dom.addEventListener(event.toLowerCase(), callback.bind(this), false);
             return this;
         }
     });
@@ -250,6 +250,69 @@
 
     UI.H2.prototype = Object.create(UI.Element.prototype);
     UI.H2.prototype.constructor = UI.H2;
+    
+    UI.Input = function (text, type) {
+
+        UI.Element.call(this);
+
+        var dom = document.createElement('Input');
+
+        dom.className = 'input';
+
+        doms.style.padding = '2px';
+
+        dom.style.border = '1px solid transparent';
+        
+        dom.type = type || 'text';
+
+        dom.addEventListener('keydow', function (event) {
+
+            event.stopPropagation();
+
+        }, false);
+
+        this.dom = dom;
+        this.setValue( text );
+
+    };
+
+    UI.Input = Object.create(UI.Element.prototype);
+
+    UI.Input.prototype = {
+
+        constructor: UI.Input,
+
+        setValue: function (value) {
+            
+            this.dom.value = value;
+
+            return this;
+
+        },
+
+        getValue: function () {
+
+            return this.dom.value;
+
+        },
+
+        setPlaceHolder: function (placeholder) {
+
+            this.dom.placeholder = placeholder;
+
+            return this;
+
+        },
+
+        setDisabled: function (flag) {
+
+            this.dom.disabled = flag;
+
+            return this;
+
+        }
+    };
+    
 
     window.UI = UI;
 

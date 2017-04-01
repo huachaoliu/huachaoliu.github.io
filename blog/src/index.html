@@ -9,7 +9,7 @@
     <script class="target" src="./static/js/ajax.js"></script>
     <script class="target" src="./static/js/UI.js"></script>
     <script class="target" src="./static/js/signals.min.js"></script>
-    <script class="target" src="./static/js/Container.js"></script>
+    <script class="target" src="./static/js/Store.js"></script>
     <script class="target" src="./static/js/TopPanel.js"></script>
     <script class="target" src="./static/js/Navbar.js"></script>
     <script class="target" src="./static/js/layout/Wrapper.js"></script>
@@ -27,19 +27,19 @@
 
 <body>
     <script>
-        var container = new Container();
+        var store = new Store();
 
-        var topPanel = new TopPanel(container);
+        var topPanel = new TopPanel(store);
         document.body.appendChild(topPanel.dom);
 
-        var navbar = new Navbar(container);
+        var navbar = new Navbar(store);
         document.body.appendChild(navbar.dom);
 
-        var sidebar = new Sidebar(container);
+        var sidebar = new Sidebar(store);
 
-        var content = new Content(container);
+        var content = new Content(store);
 
-        var footer = new Footer(container);
+        var footer = new Footer(store);
 
 
         setTimeout(function () {
@@ -54,13 +54,13 @@
 
         }, 1500);
 
-        var signals = container.signals;
+        var signals = store.signals;
 
         signals.changeShowOrFalse.add(function () {
 
-            container.setShowOrFalse();
+            store.setShowOrFalse();
 
-            if (container.showOrFalse) {
+            if (store.showOrFalse) {
 
                 sidebar.removeClass('hide');
 

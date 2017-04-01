@@ -1,6 +1,6 @@
-var TopPanel = function (container) {
+var TopPanel = function (store) {
 
-    var signals = container.signals;
+    var signals = store.signals;
 
     var panel = new UI.Div().setClass('toppanel');
 

@@ -1,6 +1,6 @@
-var Container = function () {
+var Store = function () {
     var Signal = signals.Signal;
-    this.name = 'container';
+    this.name = 'store';
 
     this.signals = {
         menuItemClicked: new Signal(),
@@ -16,7 +16,7 @@ var Container = function () {
 
 };
 
-Container.prototype = {
+Store.prototype = {
     setShowOrFalse: function () {
         this.showOrFalse = !this.showOrFalse;
     }

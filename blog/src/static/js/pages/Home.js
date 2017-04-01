@@ -9,7 +9,7 @@ var Home = function (container) {
      * @param: {object} obj - 选中的目标属性对象集合
     */
     // var fileReader = new window.FileReader;
-
+    
     //读取首页文档
     var homeFile = new HomeFiles();
 

@@ -4,6 +4,7 @@ body{
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;    
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
 }
 
 h2 {
@@ -192,6 +193,7 @@ h2 {
     border-radius: 50%;
     margin: 20px 40px;
     border: 2px double;
+    padding-left: 0;
 }
 
 .sidetags{

@@ -1,9 +1,9 @@
-var Sidebar = function (container) {
+var Sidebar = function (store) {
 
-    var signals = container.signals;
+    var signals = store.signals;
 
     var sidebar = new UI.Div();
-    
+
     sidebar.setClass('sidebar');
 
     var headTitle = new UI.Div();
@@ -24,7 +24,7 @@ var Sidebar = function (container) {
     var log = 0, category = 0, tag = 0;
 
     for (var j = 0, len = homeFiles.length; j < len; j++) {
-        if (homeFiles[j].type === "log"){
+        if (homeFiles[j].type === "log") {
             log += 1;
         } else if (homeFiles[j].type === "tag") {
             tag += 1;
@@ -48,13 +48,27 @@ var Sidebar = function (container) {
             new UI.Span().setText(tagStack[i].value)
         );
 
-        tagItem.onClick(function () {
+        //callback
 
-            var args = Array.prototype.slice.call(arguments)[0];
+        // tagItem.onClick(function () {
 
-            signals.sideTagClicked.dispatch(args[1][ args[2] ]);
+        // var args = Array.prototype.slice.call(arguments)[0];
 
-        }, tagStack, i);
+        // signals.sideTagClicked.dispatch(args[1][ args[2] ]);
+
+        // }, tagStack, i);
+
+        //闭包
+        (function (i) {
+            
+            tagItem.onClick(function () {
+
+                signals.sideTagClicked.dispatch(tagStack[i]);
+
+            });
+
+        })(i);
+
 
         tags.add(tagItem);
 
@@ -65,7 +79,7 @@ var Sidebar = function (container) {
     weixin.add(
         new UI.Span().setClass('title').setText('二维码'),
         new UI.Image().setClass('qrcode').setSrc('./static/img/qrcode.jpg')
-    )
+    );
 
     sidebar.add(
         headTitle,
