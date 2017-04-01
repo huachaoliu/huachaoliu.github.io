@@ -1,11 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>我是一个小码农</title>
     <link rel="stylesheet" href="./static/css/reset.css">
+    <link rel="stylesheet" href="./static/css/style.css">
+    <script src="./static/js/signal.min.js"></script>
+
+    <script src="./static/js/components/ui.js"></script>
+    <script src="./static/js/components/wrapper.js"></script>
+    <script src="./static/js/components/navbar.js"></script>
+    <script src="./static/js/components/menubar.js"></script>
+    <script src="./static/js/components/navigation.js"></script>
+    <script src="./static/js/components/sidebar.js"></script>
+    <script src="./static/js/components/content.js"></script>
+    <script src="./static/js/components/footer.js"></script>
+    <script src="./static/js/components/pages/home.js"></script>
+    <script src="./static/js/components/pages/article.js"></script>
+    <script src="./static/js/components/datas/homeFiles.js"></script>
+
+    <script src="./static/js/stores/store.js"></script>
+    <script src="./static/js/tools/tool.js"></script>
+
 </head>
+
 <body>
-    我是一个小码农!
+
+    <script>
+        var store = new Store();
+
+        var topPanel = new TopPanel(store);
+        document.body.appendChild(topPanel.dom);
+
+        var navbar = new Navbar(store);
+        document.body.appendChild(navbar.dom);
+
+        var sidebar = new Sidebar(store);
+
+        var content = new Content(store);
+
+        var footer = new Footer(store);
+
+        setTimeout(function () {
+
+            navbar.addClass('onleft');
+
+            document.body.appendChild(sidebar.dom);
+
+            document.body.appendChild(content.dom);
+
+            document.body.appendChild(footer.dom);
+
+        }, 1500);
+
+        var signals = store.signals;
+
+        signals.changeShowOrFalse.add(function () {
+
+            store.setShowOrFalse();
+
+            if (store.showOrFalse) {
+
+                sidebar.removeClass('hide');
+
+                navbar.removeClass('toright').addClass('onleft');
+
+                content.removeClass('contentgoright').addClass('contentgoleft');
+
+                footer.removeClass('footerleft').addClass('footer');
+
+            } else {
+
+                sidebar.addClass('hide');
+
+                navbar.removeClass('navbar').removeClass('onleft').addClass('toright');
+
+                content.removeClass('content').removeClass('contentgoleft').addClass('contentgoright');
+
+                footer.removeClass('footer').addClass('footerleft');
+            }
+        });
+
+        signals.goTopChanged.add(function () {
+
+            if (document.body.scrollTop) {
+
+                var timer = null;
+
+                var topY = document.body.scrollTop;
+
+                clearInterval(timer);
+
+                timer = setInterval(function () {
+
+                    topY -= 50;
+
+                    if (topY <= 0) clearInterval(timer);
+
+                    document.body.scrollTop = topY;
+
+                }, 10);
+            }
+        });
+
+    </script>
 </body>
+
 </html>

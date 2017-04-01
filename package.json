@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "python -m SimpleHTTPServer 10000",
-    "dev": "node src/server/server.js",
+    "dev": "node src/server/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
