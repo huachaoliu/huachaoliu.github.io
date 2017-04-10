@@ -3,6 +3,7 @@
     height: 20px;
 }
 
+
 .color-picker[color-root="div"] {
     cursor: pointer;
     background: #333;
@@ -14,13 +15,38 @@
 }
 
 .color-wrapper{
-    max-width: 300px;
+    max-width: 480px;
     height: 300px;
     border: 1px solid #555;
     background: #aaa;
     padding: 5px;
 }
 
+.color-title{
+    height: 30px;
+    background: #fff;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.color-box{
+    float: left;
+    margin-right: 20px;
+}
+
 .color-rgb{
     float: left;
+}
+
+.hex-pannel{
+    width: 180px;
+    height: 256px;
+    float: left;
+    background: #fff;
+}
+
+.hex-row{
+    height: 50px;
+    line-height: 50px;
 }
