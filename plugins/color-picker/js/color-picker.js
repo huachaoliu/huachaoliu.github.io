@@ -6,7 +6,8 @@
 
         var colorPickers = {
 
-            // container: container || 'color-picker',           
+            // container: container || 'color-picker',       
+            dragMove: false    
 
         };
 
@@ -29,7 +30,7 @@
         }
 
 
-        this.init(container, params);
+        this.init(params);
 
     };
 
@@ -42,6 +43,33 @@
             //render ui
             this.renderColorPickerUI();
 
+            if (options.dragMove) {
+
+                var self = this;
+
+                setTimeout(function() {
+                    
+                    self.dragMove();
+
+                }, 20);
+
+            }
+
+        },
+
+        dragMove: function () {
+
+           var moveTarget = document.getElementsByClassName('color-title')[0];
+
+           var wrapper = document.getElementsByClassName('color-wrapper')[0];
+
+           wrapper.style.position = 'absolute';
+
+           moveTarget.onmousedown = function (e) {
+
+               console.log(e.pageX);
+
+           }
 
         },
 
@@ -114,7 +142,7 @@
 
                 rgbaValue.type = 'text';
 
-                rgbaValue.style.disabled = true;
+                rgbaValue.disabled = true;
 
                 rgbaValue.value = 0;
 
@@ -130,8 +158,6 @@
             }
 
             colorWrapper.appendChild(colorBox);
-
-            console.log(rgbValus);
             
             for (var i = 0; i < 256; i++) {
                 //填充小方块
@@ -169,7 +195,6 @@
 
                     document.body.style.backgroundColor = '#' + r + g + b;
 
-                    console.log(self.dom.value.length);
                     // dom.style.display = 'none';
 
                 };
