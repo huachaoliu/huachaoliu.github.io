@@ -1,0 +1,17 @@
+.navbar{
+    padding: 0 20px;
+    margin: 50px 0;
+    height: 24px;
+    line-height: 24px;
+    background: #eee;
+    color: #0a3b80;
+    font-size: 14px;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.example {
+    cursor: pointer;
+}

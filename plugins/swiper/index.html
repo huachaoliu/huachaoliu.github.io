@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>swiper</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/swiper.css">
+    <script src="js/swiper.js"></script>
+    <style>
+        .rgb{
+            float: left;
+        }
+        .color-picker{
+            float: left;
+        }
+        .color-wrapper{
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 24px;
+            padding: 5px;
+            background: #eee;
+            border: 1px solid #666;
+        }
+        .color-box{
+            float: left;
+            margin-right: 20px;
+        }
+        .color-pannel{
+            float: left;
+        }
+        .color-row{
+            height: 50px;
+            line-height: 50px;
+        }
+    </style>
+    <script>
+
+        window.onload = function () {
+            var color16 = [], r = [], g = [], b = [];
+
+            for (var i = 0; i < 256; i++) {
+                // rgba 0, 0, 0            
+                r.push(i);
+
+                g.push(i);
+
+                b.push(i);
+
+            }
+
+            for (var i = 0; i < 256; i++) {
+                var randomR = Math.random() * 256 | 0;
+
+                var randomG = Math.random() * 256 | 0;
+
+                var randomB = Math.random() * 256 | 0;
+
+                color16.push(r[randomR] + "," + g[randomG] + "," + b[randomB]);
+            }
+
+            var dom = document.getElementsByClassName('color-box')[0];
+
+            dom.style.width = '256px';
+            dom.style.height = '256px';
+            dom.style.border = '1px solid #000';
+            
+            var rgbBoxClickAbled = true;
+            
+            var colorWrapper = document.getElementsByClassName('color-wrapper')[0];
+
+            var colorTarget = document.getElementsByClassName('color-picker')[0];
+
+            var rHex = document.getElementsByClassName('rhex')[0],
+                gHex = document.getElementsByClassName('ghex')[0],
+                bHex = document.getElementsByClassName('bhex')[0];
+
+            colorTarget.onfocus = function (e) {
+
+                colorWrapper.style.display = 'block';
+
+            };
+
+            colorTarget.onblur = function (e) {
+                
+                // dom.style.display = 'none';                                    
+
+            };
+
+            for (var i = 0; i < 256; i++) {
+
+                var rgb = document.createElement('div');
+                rgb.className = 'rgb';
+                rgb.style.width = '16px';
+                rgb.style.height = '16px';
+                rgb.style.backgroundColor = 'rgb('+color16[i]+')';
+                rgb.setAttribute('color-data', color16[i]);
+                rgb.style.cursor = 'pointer';
+                    
+                rgb.onclick = function (e) {
+
+                    var colorData = this.getAttribute('color-data');
+                    
+                    var colors = colorData.split(',');
+
+                    var r = (toDouble(+colors[0])).toString(16),
+                        g = (toDouble(+colors[1])).toString(16),
+                        b = (toDouble(+colors[2])).toString(16);
+
+                    rHex.value = colors[0];
+
+                    gHex.value = colors[1];
+
+                    bHex.value = colors[2];
+
+                    colorTarget.value = '#' + r + g + b;          
+
+                    document.body.style.backgroundColor = '#' + r + g + b;
+
+                    // dom.style.display = 'none';
+
+                };
+
+                dom.appendChild(rgb);
+            }
+
+            function toDouble (num) {
+
+                return (parseInt( num ) > 9) ? num : '0' + num;
+
+            }
+
+        }
+    </script>
+</head>
+
+<body>
+    <input class="color-picker" type="text" color-picker value="#ffffff" />
+    <div class="color-wrapper">
+        <div class="color-box"></div>        
+        <div class="color-pannel">
+            <div class="color-row">
+                <span>R:</span>
+                <input class="rhex" type="text" value="0" disabled>
+            </div>
+            <div class="color-row">
+                <span>G:</span>
+                <input class="ghex" type="text" value="0" disabled>
+            </div>
+            <div class="color-row">
+                <span>B:</span>
+                <input class="bhex" type="text" value="0" disabled>
+            </div>
+
+        </div>
+    </div>
+    <!--本座要在这里写一个轮播图插件-->
+    <!--<div id="bannerSwiper"></div>-->
+    <!--<script>
+        new Swiper('bannerSwiper', {
+
+            src: ['../img/banner.jpg', '../img/banner1.jpg', '../img/banner2.jpg']
+
+        });
+    </script>-->
+</body>
+
+</html>

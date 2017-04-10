@@ -1,0 +1,26 @@
+.color-picker{
+    width: 100px;
+    height: 20px;
+}
+
+.color-picker[color-root="div"] {
+    cursor: pointer;
+    background: #333;
+}
+
+.color-picker[color-root="input"] {
+    width: 120px;
+    /*height: 24px;*/
+}
+
+.color-wrapper{
+    max-width: 300px;
+    height: 300px;
+    border: 1px solid #555;
+    background: #aaa;
+    padding: 5px;
+}
+
+.color-rgb{
+    float: left;
+}
