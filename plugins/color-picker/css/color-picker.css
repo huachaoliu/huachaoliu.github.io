@@ -3,7 +3,6 @@
     height: 20px;
 }
 
-
 .color-picker[color-root="div"] {
     cursor: pointer;
     background: #333;
@@ -18,8 +17,9 @@
     max-width: 480px;
     height: 300px;
     border: 1px solid #555;
-    background: #aaa;
+    background: #eaeaea;
     padding: 5px;
+    position: absolute;
 }
 
 .color-title{
@@ -30,9 +30,49 @@
     cursor: pointer;
 }
 
-.color-box{
+.color-closed {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    float: right;
+    border-radius: 50%;
+    margin: 5px 10px 0 0;
+    text-align: center;
+    background: #999 url(../img/ui-icon.png) no-repeat -94px -126px;
+}
+
+.color-mask-parent {
+    position: relative;
+    overflow: hidden;
+    width: 256px;
+    height: 256px;
+}
+
+.color-board{
     float: left;
     margin-right: 20px;
+    width: 256px;
+    height: 256px;
+    position: absolute;
+    z-index: 10001;
+    background: url(../img/map.png) no-repeat 0 0;
+}
+
+.color-mask {
+    width: 256px;
+    height: 256px;
+    background: #f09;
+    position: absolute;
+    z-index: 10000;
+}
+
+.color-wheel {
+    width: 16px;
+    height: 16px;
+    background: url(../img/map-pointer.png) no-repeat center;
+    cursor: crosshair;
+    position: absolute;
+    z-index: 10002;
 }
 
 .color-rgb{

@@ -1,25 +1,55 @@
+/**
+ * @libary {color-picker}
+ * 
+ * autor: misliu
+ * 
+ * time: 2017-04-10
+*/
 (function () {
-
     var ColorPicker = function (container, options) {
 
         var type = 'color-root';
 
-        var colorPickers = {
-
-            // container: container || 'color-picker',       
-            dragMove: false    
-
+        var defaults = {
+            wrapperWidth: 492,
+            wrapperHeight: 300,
+            targetHeight: 26,
+            dragMoveWrapper: false
         };
+        //color picker　容器
+        this.color_wrapper = 'color-wrapper';
+        //色板
+        this.color_mask_parant = 'color-mask-parent';
+        this.color_board = 'color-board';
+        this.color_mask = 'color-mask';
+        this.color_wheel = 'color-wheel';
+        //进度条
+        this.color_bar = 'color-bar';
+        //title
+        this.color_title = 'color-title';
+        //关闭按钮
+        this.color_closed = 'color-closed';
+        // color-box
+        //var color_box = 'color-box';
+        //hex-panel
+        this.color_hex_panel = 'color-hex-panel';
+        //rgba
+        this.rgba = 'RGBA';
+        // rgba row
+        this.color_hex_row = 'color-hex-row';
+        //hex type  
+        this.color_hex_type = 'color-hex-type';
+        //hex value
+        this.color_hex_value = 'color-hex-value';
 
-        var params = colorExtends(colorPickers, options);
+        //this.dom 调用插件的dom元素 inpit | div
+        var targets = document.getElementsByClassName(container);
 
-        var colorPicker = document.getElementsByClassName(container);
+        for (var i = 0; i < targets.length; i++) {
 
-        for (var i = 0; i < colorPicker.length; i++) {
+            if (targets[i].getAttribute(type)) {
 
-            if (colorPicker[i].getAttribute(type)) {
-
-                this.dom = colorPicker[i];
+                this.dom = targets[i];
 
             } else {
 
@@ -29,186 +59,163 @@
 
         }
 
+        this.COLOR_BOARD_SIZE = 256;
 
-        this.init(params);
+        var params = colorExtends(defaults, options);
 
+        this.left = parseInt(this.dom.offsetLeft); 
+        this.top = parseInt(this.dom.offsetTop) + params.targetHeight;
+        this.pointerSize = 8;
+        //构建ui
+        this.colorPickerUI = this.buildColorPickerHtml(params);
+
+        // 初始化方法
+        this.initColorPicker(params);
     };
 
+
+    //method
     ColorPicker.prototype = {
 
         constructor: ColorPicker,
 
-        init: function (options) {
+        // build color picker ui
+        buildColorPickerHtml: function (params) {
 
-            //render ui
-            this.renderColorPickerUI();
+            //外部容器
+            var colorWrapper = buildDOM('div');
+            colorWrapper.className = this.color_wrapper;
 
-            if (options.dragMove) {
+            //title
+            var colorTitle = buildDOM('div');
+            colorTitle.className = this.color_title;
 
-                var self = this;
+            //关闭按钮
+            var colorClosed = buildDOM('span');
+            colorClosed.className = this.color_closed;
 
-                setTimeout(function() {
-                    
-                    self.dragMove();
+            colorClosed.onclick = function () {
+                document.body.removeChild(colorWrapper);
+            };
 
-                }, 20);
 
-            }
+            colorTitle.appendChild(colorClosed);
+            this.dragMove(colorTitle, colorWrapper, 492, 0, 0);
+
+
+            //色板遮召层父级盒子
+            var colorMaskParent = buildDOM('div');
+            colorMaskParent.className = this.color_mask_parant;
+
+
+            //透明层
+            var colorBoard = buildDOM('div');
+            colorBoard.className = this.color_board;
+
+            //色彩层
+            var colorMask = buildDOM('div');
+            colorMask.className = this.color_mask;
+            //鼠标滚动层
+            var colorWheel = buildDOM('div');
+            colorWheel.className = this.color_wheel;
+
+            colorWheel.style.left = 0;
+            colorWheel.style.top = 0;
+
+            var w = parseInt(colorWheel.style.offsetWidth);
+            this.dragMove(colorWheel, colorWheel, this.COLOR_BOARD_SIZE, 5, 45);
+
+
+
+            colorMaskParent.appendChild(colorBoard);
+            colorMaskParent.appendChild(colorMask);
+            colorMaskParent.appendChild(colorWheel);
+
+            colorWrapper.appendChild(colorTitle);
+            colorWrapper.appendChild(colorMaskParent);
+
+            colorWrapper.style.width = params.wrapperWidth + 'px';
+            colorWrapper.style.left = this.left + 'px';
+            colorWrapper.style.top = this.top + 'px';
+
+            return colorWrapper;
 
         },
+        initColorPicker: function (options) {
 
-        dragMove: function () {
+            //show color picker ui;
+            var self = this;
 
-           var moveTarget = document.getElementsByClassName('color-title')[0];
+            this.dom.onfocus = function () {
 
-           var wrapper = document.getElementsByClassName('color-wrapper')[0];
+                document.body.appendChild(self.colorPickerUI);
 
-           wrapper.style.position = 'absolute';
-
-           moveTarget.onmousedown = function (e) {
-
-               console.log(e.pageX);
-
-           }
-
+            };
         },
 
-        renderColorPickerUI: function () {
 
-            var colorWrapper = document.createElement('div');
 
-            colorWrapper.className = 'color-wrapper';
+        dragMove: function (dragTarget, moveTarget, scope, x, y) {
+            // dragTarget: 触发事件目标
+            // moveTarget: 移动目标
+            // scope: 拖拽边界
 
-            document.body.appendChild(colorWrapper);
+            var disx = 0,
+                disy = 0;
+                
+            var self = this;
+            
+            dragTarget.addEventListener('mousedown', onMouseDown, false);
 
-            var title = document.createElement('div');
+            function onMouseDown(e) {
+                disx = e.pageX - self.left + x;
+                disy = e.pageY - self.top + y;
 
-            title.className = 'color-title';
-
-            colorWrapper.appendChild(title);
-
-            var colorBox = document.createElement('div');
-
-            colorBox.className = 'color-box';
-
-            // color
-
-            var colorStack = [], r = [], g = [], b = [];
-
-            for (var i = 0; i < 256; i++) {
-
-                r.push(i);
-                g.push(i);
-                b.push(i);
+                document.addEventListener('mousemove', onMouseMove, false);
+                document.addEventListener('mouseup', onMouseUp, false);
 
             }
 
-            for (var i = 0; i < 256; i++) {
+            function onMouseMove(e) {
 
-                var randR = Math.random() * 256 | 0;
-                var randG = Math.random() * 256 | 0;
-                var randB = Math.random() * 256 | 0;
+                var left = e.pageX - disx - self.left + x;
+                var top = e.pageY - disy - self.top + y;
 
-                colorStack.push(r[randR] + "," + g[randG] + "," + b[randB]);
-
-            }
-
-            colorBox.style.width = '256px';
-            colorBox.style.height = '256px';
-            colorBox.style.border = '1px solid #000';
-
-            //rgba 
-
-            var hexPannel = document.createElement('div');
-            hexPannel.className = 'hex-pannel';
-
-            var rgba = 'RGBA';
-
-            var rgbValus = [];
-
-            for (var i = 0; i < 4; i++) {
-
-                var rgbaRow = document.createElement('div');
-
-                rgbaRow.className = 'hex-row';
-
-                var rgbaName = document.createElement('span');
-
-                rgbaName.textContent = rgba[i] + ':';
-
-                var rgbaValue = document.createElement('input');
-
-                rgbaValue.className = rgba[i].toLowerCase() + 'hex';
-
-                rgbaValue.type = 'text';
-
-                rgbaValue.disabled = true;
-
-                rgbaValue.value = 0;
-
-                if (rgba[i] !== 'A') {
-                    rgbValus.push(rgbaValue);                    
+                var maxL = scope - disx + self.pointerSize/2 + x;
+                var maxT = scope - disy + self.pointerSize/2  + y;
+                console.log(disy);
+                if (left < - self.pointerSize) {
+                    left = - self.pointerSize;
+                } else if (left > maxL) {
+                   left = maxL; 
+                }
+                if (top < - self.pointerSize) {
+                    top = - self.pointerSize;
+                } else if (top > maxT) {
+                    top = maxT;
                 }
 
-                rgbaRow.appendChild(rgbaName);
-                rgbaRow.appendChild(rgbaValue);
+                moveTarget.style.left = left + 'px';
+                moveTarget.style.top = top + 'px';
 
-                hexPannel.appendChild(rgbaRow);
-
-            }
-
-            colorWrapper.appendChild(colorBox);
-            
-            for (var i = 0; i < 256; i++) {
-                //填充小方块
-                var rgbBox = document.createElement('div');
-                rgbBox.className = 'color-rgb';
-                rgbBox.style.width = '16px';
-                rgbBox.style.height = '16px';
-                rgbBox.style.backgroundColor = 'rgb(' + colorStack[i] + ')';
-                rgbBox.setAttribute('color-data', colorStack[i]);
-                rgbBox.style.cursor = 'pointer';
-
-
-                var self = this;
-                rgbBox.onclick = function (e) {
-
-                    var colorData = this.getAttribute('color-data');
-
-                    var colors = colorData.split(',');
-
-                    var r = (toDouble(+colors[0])).toString(16),
-                        g = (toDouble(+colors[1])).toString(16),
-                        b = (toDouble(+colors[2])).toString(16);
-
-                    rgbValus[0].value = colors[0];
-
-                    rgbValus[1].value = colors[1];
-
-                    rgbValus[2].value = colors[2];
-                    
-                    r = r.length > 1 ? r : '0' + r;
-                    g = g.length > 1 ? g : '0' + g;
-                    b = b.length > 1 ? b : '0' + b;
-
-                    self.dom.value = '#' + r + g + b;
-
-                    document.body.style.backgroundColor = '#' + r + g + b;
-
-                    // dom.style.display = 'none';
-
-                };
-
-                colorBox.appendChild(rgbBox);
+                return false;
 
             }
 
-            colorWrapper.appendChild(hexPannel);
+            function onMouseUp() {
+
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+
+            }
 
         }
 
     };
 
+
+
+    // 辅助函数
     function colorExtends(target, defaults) {
 
         for (var prop in target) {
@@ -225,11 +232,41 @@
 
     }
 
+    function buildDOM(dom) {
+
+        return document.createElement(dom);
+
+        // this.dom = document.createElement(dom);
+    }
+
+    // BuildDOM.prototype = {
+
+    //     setV  
+
+    // };
+
     function toDouble(num) {
 
         return (parseInt(num) > 9) ? num : '0' + num;
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     window.ColorPicker = ColorPicker;
 

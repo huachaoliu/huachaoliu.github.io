@@ -15,14 +15,17 @@
         <span class="example">example</span>
     </div>
 
-    <input type="text" class="color-picker" color-root="input" value="#000000">
+    <div class="container">
+
+        <input type="text" id="color-picker" class="color-picker" color-root="input" value="#ffffff">        
+
+    </div>
     <!--<div class="color-picker" color-root="div"></div>-->
 
     <script>
 
         new ColorPicker('color-picker', {
-            
-            dragMove: true
+            dragMoveWrapper: true
 
         });
 

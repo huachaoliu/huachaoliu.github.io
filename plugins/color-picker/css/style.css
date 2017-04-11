@@ -1,3 +1,9 @@
+body{
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
 .navbar{
     padding: 0 20px;
     margin: 50px 0;
@@ -6,12 +12,13 @@
     background: #eee;
     color: #0a3b80;
     font-size: 14px;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
 }
 
 .example {
     cursor: pointer;
+}
+
+.container{
+    width: 90%;
+    margin: 0 auto;
 }
