@@ -71,7 +71,8 @@
         this.rgbMap = {
             r: 255,
             g: 255,
-            b: 255
+            b: 255,
+            a: 1
         }; //起点色值;
 
         var params = colorExtends(defaults, options);
@@ -113,8 +114,8 @@
 
             colorClosed.onclick = function () {
                 document.body.removeChild(colorWrapper);
-                colorWheel.style.left = 0;
-                colorWheel.style.top = 0;
+                colorWheel.style.left = -self.pointerSize + 'px'; 
+                colorWheel.style.top = -self.pointerSize + 'px';
 
                 self.left = parseInt(self.dom.offsetLeft);
                 self.top = parseInt(self.dom.offsetTop) + params.targetHeight;
@@ -201,8 +202,8 @@
             var colorWheel = buildDOM('div');
             colorWheel.className = this.color_wheel;
 
-            // colorWheel.style.left = 0;
-            // colorWheel.style.top = 0;
+            colorWheel.style.left = - this.pointerSize + 'px';
+            colorWheel.style.top = - this.pointerSize + 'px';
 
             // var w = parseInt(colorWheel.style.offsetWidth);
 
@@ -218,8 +219,6 @@
 
                 var colorbarTop = self.top + colorbar.offsetTop;
 
-                // console.log(e.pageY);
-
                 var y = e.pageY - colorbarTop - 4;
 
                 //更新指针为止，更新色板颜色，更新rgba                
@@ -230,33 +229,50 @@
 
                 colorSelectPointer.style.top = y + 'px';
 
-                self.B = y * 8;
+                var scope = 256/6; //分区            
 
-                if (self.B >= 255) {
-                    self.B = 255;
+                /**
+                 * [0-6]    this.B++ rgb[255, 0, 0~255];
+                 * [6-12]   this.R-- rgb[255~0, 0, 255];
+                 * [12-18]  this.G++ rgb[0, 0~255, 255];
+                 * [18-24]  this.B-- rgb[0, 255~0, 255];
+                 * [24-36]  this.R++ rgb[0~255, 0, 255];
+                 * [36-0]   this.G--, this.B-- rgb[255, 255~0, 255~0];
+                 * */                
 
-                    if (self.R >= 255) {
-                        self.R = 255;
+                
 
-                        self.G = y * 8;
-
-                        if (self.G >= 255) {
-                            self.G = 255;
-                        } else if (self.G <= 0) {
-                            self.G = 0;
-                        } else {
-                            self.G = y * 8;
-                        }
-
-                    } else if (self.R <= 0) {
-                        self.R = 0;
-                    } else {
-                        self.R = y * 8;
-                    }
-
-                } else if (self.B <= 0) {
+                if (y <= -3) {
+                    self.G = 0;
                     self.B = 0;
+                } else if (y >= scope) {
+                    self.G = 0;
+                    self.B = 255;
+                } else {
+                    self.G = 0;
+                    self.B = Math.abs(y * 6) + 3;
                 }
+
+                if (y < scope) {
+                    self.R = 255;
+                    self.G = 0;
+                } else if (y >= scope * 2) {
+                    self.R = 0;
+                    self.G = 0;
+                } else if (y > scope && y < 2 * scope){
+                    self.R = 255 - ((y- scope) * 6 - 7);
+                    self.G = 0;
+                }   
+
+                //g: 0 - 255;
+                if (y < scope * 2) {
+                    self.G = 255;
+                } else if (y >= scope * 3) {
+                    self.G = 0;
+                } else if (y > 2*scope && y < 3 * scope){
+                    self.G = 255 - ((y- scope*2) * 6 - 7);
+                }  
+
                 colorMask.style.background = 'rgb(' + self.R + ',' + self.B + ', 0)';
 
                 rHex.value = self.R;
@@ -280,45 +296,59 @@
 
                     colorSelectPointer.style.top = y + 'px';
 
-                    colorMask.style.background = 'rgb(' + self.R + ',' + self.B + ', 0)';
-                    self.B = y * 8;
+                    colorMask.style.background = 'rgb(' + self.R + ',' + self.G + ','+self.B+')';
 
-                    // if (self.B >= 255) {
-                    //     self.B = 255;
-                    //     self.R = 255 - y;
-                    // } else if (self.B <= 0) {
-                    //     self.B = 0;
-                    // }
+                    
+                    //b: 255 - 0;
 
-                    if (self.B >= 255) {
-                        self.B = 255;
-
-                        if (self.R >= 255) {
-                            self.R = 255;
-
-                            self.G = y * 8;
-
-                            if (self.G >= 255) {
-                                self.G = 255;
-                            } else if (self.G <= 0) {
-                                self.G = 0;
-                            } else {
-                                self.G = y * 8;
-                            }
-
-                        } else if (self.R <= 0) {
-                            self.R = 0;
-                        } else {
-                            self.R = y * 8;
-                        }
-
-                    } else if (self.B <= 0) {
+                    if (y <= -3) {
+                        self.G = 0;
                         self.B = 0;
+                    } else if (y >= scope) {
+                        self.G = 0;
+                        self.B = 255;
+                    } else {
+                        self.G = 0;
+                        self.B = Math.abs(y * 6) + 3;
                     }
+
+                    //r: 0 - 255;
+                    if (y < scope) {
+                        self.R = 255;
+                        self.G = 0;
+                    } else if (y >= scope * 2) {
+                        self.R = 0;
+                        self.G = 0;
+                    } else if (y > scope && y < 2 * scope){
+                        self.R = 255 - ((y- scope) * 6 - 7);
+                        self.G = 0;
+                    }   
+
+                    //g: 0 - 255;
+                    if (y < scope * 2) {
+                        self.G = 0;
+                    } else if (y >= scope * 3) {
+                        self.G = 255;
+                    } else if (y > 2*scope && y < 3 * scope){
+                        self.G = Math.abs((y- scope*2) * 6 - 7) | 0;
+                    }  
+
+                    if (y < 3*scope) {
+                        self.B = 255;
+                    } else if (y >= 4 * scope) {
+                        self.B = 0;
+                    } else if ( y > 3* scope && y <= 4*scope) {
+                        self.B = 255 - ((y- scope*3) * 6 - 7);
+                    }
+
+                    
 
                     rHex.value = self.R;
                     gHex.value = self.G;
                     bHex.value = self.B;
+
+                    console.log(y);
+                    colorMask.style.background = 'rgb(' + self.R + ',' + self.G + ', '+self.B+')';
 
                 }
 
@@ -352,7 +382,7 @@
                 var colorRgbValue = buildDOM('input');
                 colorRgbValue.className = this.color_hex_value + ' ' + this.rgba[i].toLowerCase() + 'hex';
                 colorRgbValue.type = 'text';
-                colorRgbValue.value = 0;
+                colorRgbValue.value = this.rgbMap[this.rgba[i].toLowerCase()];
 
                 colorRgbRow.appendChild(colorRgbKey);
                 colorRgbRow.appendChild(colorRgbValue);
@@ -360,6 +390,27 @@
                 colorPanel.appendChild(colorRgbRow);
 
             }
+
+            // 16进制
+
+            var colorRgbRow = buildDOM('div');
+            colorRgbRow.className = this.color_hex_row;
+            var colorRgbKey = buildDOM('span');
+            colorRgbKey.className = this.color_hex_key;
+            colorRgbKey.textContent = 'Hex:';
+            var colorRgbValue = buildDOM('input');
+            colorRgbValue.className = this.color_hex_value;
+            colorRgbValue.type = 'text';
+
+            var hexValue = toRgbHex(this.rgbMap.r.toString(16)) + 
+                toRgbHex(this.rgbMap.g.toString(16)) + 
+                toRgbHex(this.rgbMap.b.toString(16));
+            console.log(hexValue);
+            colorRgbValue.value = '#'+hexValue;    
+            colorRgbRow.appendChild(colorRgbKey);
+            colorRgbRow.appendChild(colorRgbValue);
+            colorPanel.appendChild(colorRgbRow);
+            //默认起点 [255, 0, 0]
 
 
             // var map = [-8, -8]; //起点
