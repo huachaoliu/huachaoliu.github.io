@@ -60,7 +60,7 @@
 
             if (doms[i] !== null) {
 
-                parent.appendChild(doms[i]);                
+                parent.appendChild(doms[i]);
 
             }
 
@@ -149,7 +149,7 @@
         this.wheelSize = 8;
         this.selectSize = 3;
         this.COLOR_BOARD_SIZE = 256;
-        this.panelRowKeyStack = [];                   
+        this.panelRowKeyStack = [];
 
         //生产dom
 
@@ -196,7 +196,7 @@
             colorTitle.textContent = 'color picker';
 
             var colorClosed = getDom('span', this.color_closed);
-            
+
             this.closed = colorClosed;
 
             colorTitle.appendChild(colorClosed);
@@ -249,12 +249,14 @@
             if (params.rgbPanels) {
 
                 colorPanel = getDom('div', this.color_hex_panel);
-                
+
                 var colorbg = getDom('div', this.color_hex_bg);
 
-                colorbg.style.background = 'rgb('+this.r+','+this.g+','+this.b+')';
+                colorbg.style.background = 'rgb(' + this.r + ',' + this.g + ',' + this.b + ')';
 
-                colorPanel.appendChild(colorbg);     
+                this.hex_bg = colorbg;
+
+                colorPanel.appendChild(colorbg);
 
                 for (var i = 0; i < this.rgbPanelRow.length; i++) {
 
@@ -266,7 +268,7 @@
 
                     var colorValue = getDom('input', this.color_hex_value);
 
-                    colorValue.className += ' '  + this.rgbPanelRow[i] + 'hex';
+                    colorValue.className += ' ' + this.rgbPanelRow[i] + 'hex';
 
                     self.panelRowKeyStack.push(colorValue);
 
@@ -277,14 +279,14 @@
                     colorPanel.appendChild(colorRow);
 
                 }
-                
+
                 //差值
                 // var rhex = document.getElementsByClassName('rhex')[0];
                 self.panelRowKeyStack[0].value = this.r;
                 self.panelRowKeyStack[1].value = this.g;
                 self.panelRowKeyStack[2].value = this.b;
                 self.panelRowKeyStack[3].value = 1;
-                self.panelRowKeyStack[4].value = '#' + initHex(this.r) + 
+                self.panelRowKeyStack[4].value = '#' + initHex(this.r) +
                     initHex(this.g) +
                     initHex(this.b);
 
@@ -443,13 +445,13 @@
                 }
 
                 changeRgb();
-                
-                function changeRgb () {
+
+                function changeRgb() {
 
                     var r = self.colorMap.r,
                         g = self.colorMap.g,
                         b = self.colorMap.b;
-                    
+
                     var hexL = parseInt(self.wheel.style.left) + self.wheelSize;
                     var hexT = parseInt(self.wheel.style.top) + self.wheelSize;
 
@@ -458,12 +460,44 @@
                     if (hexT === 256) hexT = self.r;
 
                     r = Math.abs(self.r - hexT);
+                    // g = ((255 - disX) + (1/255) * 100 * disY) | 0;
+                    // b = ((255 - disX) + (1/255) * 100 * disY) | 0;
+                    // if (disX > disY) {
+
+                    //     g = 255 - disX - 7;
+                    //     b = 255 - disX - 7;
+
+                    // } else {
+
+                    //     g = (1/255) * 100 * (disX + disY) | 0;
+                    //     b = (1/255) * 100 * (disX + disY) | 0;
+
+                    // }
+
+                    // g = 255 - (1 / 255) * 100 * (disX + disY) | 0;
+                    // b = 255 - (1 / 255) * 100 * (disX + disY) | 0;
+
+                    if (hexL > hexT) {
+                        g = Math.abs(self.r - hexL);
+                        b = Math.abs(self.r - hexL);
+                    } else {
+                        g = Math.abs(self.r - hexT);
+                        b = Math.abs(self.r - hexT);
+                    }
 
                     var rhex = self.panelRowKeyStack[0];
                     var ghex = self.panelRowKeyStack[1];
                     var bhex = self.panelRowKeyStack[2];
-                    
+
                     rhex.value = r;
+
+                    ghex.value = g;
+
+                    bhex.value = b;
+
+                    var bg = r + ',' + g + ',' + b;
+
+                    self.hex_bg.style.background = 'rgb(' + bg + ')';
 
                     console.log(r);
 
@@ -541,7 +575,7 @@
 
                 var y = e.pageY - t - self.selectSize;
 
-                self.toRgbColor(disX, disY, y, scope);                                
+                self.toRgbColor(disX, disY, y, scope);
 
                 if (rgbPanels) {
                     //...
@@ -565,7 +599,7 @@
                         y = self.COLOR_BOARD_SIZE - self.selectSize;
                     }
 
-                    self.toRgbColor(disX, disY, y, scope);                    
+                    self.toRgbColor(disX, disY, y, scope);
 
                     if (rgbPanels) {
                         //...
