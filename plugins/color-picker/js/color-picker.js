@@ -4,11 +4,14 @@
  * autor: misliu
  * 
  * time: 2017-04-10
+ * 
 */
+//修改逻辑，ui,行为分离,dom全局，响应式colorpicker的坐标
+
 (function () {
     var ColorPicker = function (container, options) {
 
-        var type = 'color-root';
+        this.type = 'color-root';
 
         var defaults = {
             wrapperWidth: 492,
@@ -41,6 +44,7 @@
         this.color_hex_row = 'color-hex-row';
         //hex type  
         this.color_hex_key = 'color-hex-key';
+        this.color_string_hex = 'strhex';
         this.color_hex_type = 'color-hex-type';
         //hex value
         this.color_hex_value = 'color-hex-value';
@@ -50,7 +54,7 @@
 
         for (var i = 0; i < targets.length; i++) {
 
-            if (targets[i].getAttribute(type)) {
+            if (targets[i].getAttribute(this.type)) {
 
                 this.dom = targets[i];
 
@@ -106,7 +110,7 @@
             //title
             var colorTitle = buildDOM('div');
             colorTitle.className = this.color_title;
-            colorTitle.textContent = 'colo picker';
+            colorTitle.textContent = 'color picker';
 
             //关闭按钮
             var colorClosed = buildDOM('span');
@@ -114,7 +118,7 @@
 
             colorClosed.onclick = function () {
                 document.body.removeChild(colorWrapper);
-                colorWheel.style.left = -self.pointerSize + 'px'; 
+                colorWheel.style.left = -self.pointerSize + 'px';
                 colorWheel.style.top = -self.pointerSize + 'px';
 
                 self.left = parseInt(self.dom.offsetLeft);
@@ -123,6 +127,16 @@
                 colorWrapper.style.left = self.left + 'px';
                 colorWrapper.style.top = self.top + 'px';
 
+                self.R = 255;
+                self.G = 0;
+                self.B = 0;
+
+                self.rgbMap = {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 1
+                };
             };
 
 
@@ -183,7 +197,7 @@
 
             }
 
-            //色板遮召层父级盒子
+            //色板遮罩层父级盒子
             var colorMaskParent = buildDOM('div');
             colorMaskParent.className = this.color_mask_parant;
 
@@ -219,6 +233,9 @@
 
                 var colorbarTop = self.top + colorbar.offsetTop;
 
+                var disX = colorWheel.offsetLeft + self.pointerSize;
+                var disY = colorWheel.offsetTop + self.pointerSize;
+
                 var y = e.pageY - colorbarTop - 4;
 
                 //更新指针为止，更新色板颜色，更新rgba                
@@ -226,10 +243,11 @@
                 var rHex = document.getElementsByClassName(self.rgba[0].toLowerCase() + 'hex')[0];
                 var gHex = document.getElementsByClassName(self.rgba[1].toLowerCase() + 'hex')[0];
                 var bHex = document.getElementsByClassName(self.rgba[2].toLowerCase() + 'hex')[0];
+                var hexHex = document.getElementsByClassName(self.color_string_hex)[0];
 
                 colorSelectPointer.style.top = y + 'px';
 
-                var scope = 256/6; //分区            
+                var scope = 256 / 6 | 0; //分区            
 
                 /**
                  * [0-6]    this.B++ rgb[255, 0, 0~255];
@@ -238,52 +256,19 @@
                  * [18-24]  this.B-- rgb[0, 255~0, 255];
                  * [24-36]  this.R++ rgb[0~255, 0, 255];
                  * [36-0]   this.G--, this.B-- rgb[255, 255~0, 255~0];
-                 * */                
+                 * */
 
-                
+                var bgRgb = self.R + ',' + self.G + ',' + self.B;
 
-                if (y <= -3) {
-                    self.G = 0;
-                    self.B = 0;
-                } else if (y >= scope) {
-                    self.G = 0;
-                    self.B = 255;
-                } else {
-                    self.G = 0;
-                    self.B = Math.abs(y * 6) + 3;
-                }
-
-                if (y < scope) {
-                    self.R = 255;
-                    self.G = 0;
-                } else if (y >= scope * 2) {
-                    self.R = 0;
-                    self.G = 0;
-                } else if (y > scope && y < 2 * scope){
-                    self.R = 255 - ((y- scope) * 6 - 7);
-                    self.G = 0;
-                }   
-
-                //g: 0 - 255;
-                if (y < scope * 2) {
-                    self.G = 255;
-                } else if (y >= scope * 3) {
-                    self.G = 0;
-                } else if (y > 2*scope && y < 3 * scope){
-                    self.G = 255 - ((y- scope*2) * 6 - 7);
-                }  
-
-                colorMask.style.background = 'rgb(' + self.R + ',' + self.B + ', 0)';
-
-                rHex.value = self.R;
-                gHex.value = self.G;
-                bHex.value = self.B;
-
+                getRgb(y, disX, disY, scope);
 
                 document.addEventListener('mousemove', onMouseMoveSelect, false);
                 document.addEventListener('mouseup', onMouseUpSelect, false);
 
                 function onMouseMoveSelect(e) {
+
+                    disX = colorWheel.offsetLeft + self.pointerSize;
+                    disY = colorWheel.offsetTop + self.pointerSize;
 
                     y = e.pageY - self.top - colorbar.offsetTop - 4;
 
@@ -296,59 +281,93 @@
 
                     colorSelectPointer.style.top = y + 'px';
 
-                    colorMask.style.background = 'rgb(' + self.R + ',' + self.G + ','+self.B+')';
+                    getRgb(y, disX, disY, scope);
 
-                    
-                    //b: 255 - 0;
+                }
+
+                function getRgb(y, x, t, scope) {
+
+                    //当选择颜色后
+
+                    var minR, maxR;
+
+
 
                     if (y <= -3) {
-                        self.G = 0;
-                        self.B = 0;
-                    } else if (y >= scope) {
-                        self.G = 0;
-                        self.B = 255;
-                    } else {
-                        self.G = 0;
-                        self.B = Math.abs(y * 6) + 3;
-                    }
-
-                    //r: 0 - 255;
-                    if (y < scope) {
                         self.R = 255;
                         self.G = 0;
-                    } else if (y >= scope * 2) {
-                        self.R = 0;
-                        self.G = 0;
-                    } else if (y > scope && y < 2 * scope){
-                        self.R = 255 - ((y- scope) * 6 - 7);
-                        self.G = 0;
-                    }   
-
-                    //g: 0 - 255;
-                    if (y < scope * 2) {
-                        self.G = 0;
-                    } else if (y >= scope * 3) {
-                        self.G = 255;
-                    } else if (y > 2*scope && y < 3 * scope){
-                        self.G = Math.abs((y- scope*2) * 6 - 7) | 0;
-                    }  
-
-                    if (y < 3*scope) {
-                        self.B = 255;
-                    } else if (y >= 4 * scope) {
                         self.B = 0;
-                    } else if ( y > 3* scope && y <= 4*scope) {
-                        self.B = 255 - ((y- scope*3) * 6 - 7);
+
+                    } else if (y > -3 && y <= scope) {
+                        //[0-6]    this.B++ rgb[255, 0, 0~255];
+                        self.R = 255;
+                        self.G = 0;
+                        self.B = Math.abs(y * 6) + 3;
+
+                    } else if (y > scope && y <= 2 * scope) {
+                        //[6-12]   this.R-- rgb[255~0, 0, 255];
+                        self.R = 255 - ((y - scope) * 6 + 3);
+                        self.G = 0;
+                        self.B = 255;
+
+                    } else if (y > 2 * scope && y <= 3 * scope) {
+                        //[12-18]  this.G++ rgb[0, 0~255, 255];
+                        self.R = 0;
+                        self.G = Math.abs((y - scope * 2) * 6 + 3);
+                        self.B = 255;
+
+                    } else if (y > 3 * scope && y <= 4 * scope) {
+                        //[18-24]  this.B-- rgb[0, 255~0, 255];
+                        self.R = 0;
+                        self.G = 255;
+                        self.B = 255 - ((y - 3 * scope) * 6 + 3);
+
+                    } else if (y > 4 * scope && y <= 5 * scope) {
+                        //[24-36]  this.R++ rgb[0~255, 0, 255];
+                        self.R = Math.abs((y - 4 * scope) * 6) + 3;
+
+                        if (self.R <= x) self.R = x;
+
+                        self.G = 255;
+                        self.B = 0;
+
+                    } else if (y > 5 * scope && y <= 6 * scope) {
+                        //[36-0]   this.G--, this.B-- rgb[255, 255~0, 255~0];
+                        self.R = 255;
+                        self.G = 255 - ((y - 5 * scope) * 6 + 3);
+                        self.B = 0;
+
+                    } else if (y >= 6 * scope) {
+                        self.R = 255;
+                        self.G = 0;
+                        self.B = 0;
                     }
 
-                    
+                    bgRgb = self.R + ',' + self.G + ',' + self.B;
 
+                    colorMask.style.background = 'rgb(' + bgRgb + ')';
+                    colorBg.style.background = 'rgb(' + bgRgb + ')';
+
+                    console.log(x, t);
+
+                    // rHex.value = Math.abs(self.R - x);
+                    // gHex.value = Math.abs(self.G - x);
+                    // bHex.value = Math.abs(self.B - x);
                     rHex.value = self.R;
                     gHex.value = self.G;
                     bHex.value = self.B;
 
-                    console.log(y);
-                    colorMask.style.background = 'rgb(' + self.R + ',' + self.G + ', '+self.B+')';
+                    var colorStr = '#' + toRgbHex(self.R.toString(16)) +
+                        toRgbHex(self.G.toString(16)) +
+                        toRgbHex(self.B.toString(16));
+
+                    hexHex.value = colorStr;
+
+                    if (self.dom.getAttribute(self.type) === 'input') {
+                        self.dom.value = colorStr;
+                    } else {
+                        self.dom.style.background = colorStr;
+                    }
 
                 }
 
@@ -382,6 +401,7 @@
                 var colorRgbValue = buildDOM('input');
                 colorRgbValue.className = this.color_hex_value + ' ' + this.rgba[i].toLowerCase() + 'hex';
                 colorRgbValue.type = 'text';
+                console.log(this.rgbMap);
                 colorRgbValue.value = this.rgbMap[this.rgba[i].toLowerCase()];
 
                 colorRgbRow.appendChild(colorRgbKey);
@@ -397,16 +417,15 @@
             colorRgbRow.className = this.color_hex_row;
             var colorRgbKey = buildDOM('span');
             colorRgbKey.className = this.color_hex_key;
-            colorRgbKey.textContent = 'Hex:';
+            colorRgbKey.textContent = 'val:';
             var colorRgbValue = buildDOM('input');
-            colorRgbValue.className = this.color_hex_value;
+            colorRgbValue.className = this.color_hex_value + ' ' + this.color_string_hex;
             colorRgbValue.type = 'text';
 
-            var hexValue = toRgbHex(this.rgbMap.r.toString(16)) + 
-                toRgbHex(this.rgbMap.g.toString(16)) + 
+            var hexValue = toRgbHex(this.rgbMap.r.toString(16)) +
+                toRgbHex(this.rgbMap.g.toString(16)) +
                 toRgbHex(this.rgbMap.b.toString(16));
-            console.log(hexValue);
-            colorRgbValue.value = '#'+hexValue;    
+            colorRgbValue.value = '#' + hexValue;
             colorRgbRow.appendChild(colorRgbKey);
             colorRgbRow.appendChild(colorRgbValue);
             colorPanel.appendChild(colorRgbRow);
@@ -510,6 +529,14 @@
                     rHex.value = r;
                     gHex.value = g;
                     bHex.value = b;
+
+                    var hexHex = document.getElementsByClassName(self.color_string_hex)[0];
+
+                    var colorStr = '#' + toRgbHex(r.toString(16)) +
+                        toRgbHex(g.toString(16)) +
+                        toRgbHex(b.toString(16));
+
+                    hexHex.value = colorStr;
 
                     return false;
 
