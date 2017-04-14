@@ -16,10 +16,11 @@
 .color-wrapper{
     max-width: 450px;
     height: 300px;
-    border: 1px solid #555;
+    border: 1px solid #aaa;
     background: #eaeaea;
     padding: 5px;
     position: absolute;
+    border-radius: 5px;
 }
 
 .color-title{
@@ -42,7 +43,12 @@
     border-radius: 50%;
     margin: 5px 10px 0 0;
     text-align: center;
-    background: #999 url(../img/ui-icon.png) no-repeat -94px -126px;
+    background: #999 url(../img/ui-icon.png) no-repeat 40% -126px;
+}
+
+
+.color-closed:hover{
+    background-color: #333;
 }
 
 .color-mask-parent {
