@@ -17,7 +17,7 @@
     max-width: 450px;
     height: 300px;
     border: 1px solid #aaa;
-    background: #eaeaea;
+    background: #333;
     padding: 5px;
     position: absolute;
     border-radius: 5px;
@@ -109,22 +109,23 @@
 }
 
 .color-hex-panel{
-    width: 100px;
+    width: 78px;
     height: 236px;
     float: left;
-    background: #fff;
     padding: 10px 20px;
 }
 
 .color-hex-bg{
     width: 100%;
     height: 22px;
-    border: 1px solid #aaa;
+    border: 1px solid #666;
 }
 
 .color-hex-row{
     height: 40px;
     line-height: 40px;
+    color: #aaa;
+    font-weight: bold;
 }
 
 .color-hex-key{
@@ -133,5 +134,8 @@
 }
 
 .color-hex-value{
-    width: 70px;
+    width: 48px;
+    color: #aaa;
+    background: #333;
+    border-color: #666;
 }
