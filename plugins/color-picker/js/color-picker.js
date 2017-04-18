@@ -1,26 +1,23 @@
+/**
+ * @libary {color-picker}
+ * 
+*/
+
 (function () {
-
-    var Color = function (val) {
-
-
-
-    };
 
     var ColorPicker = function (target, options) {
 
-        // var root = 'color-root';
         this.dom = document.getElementById(target);
-        // this.type = this.dom.getAttribute(root);
-        // var position = ['left', 'top', 'right','bottom'];
+
         var defaults = {
-            h: 26, //目标高度
-            dragMove: false, //是否可拖拽
-            showRgbProps: true, //是否显示属性面板
-            changeTargetBg: true,
-            position: 'left bottom',
+            h: 26,
+            dragMove: false,
+            showRgbProps: false,
+            showTargetBg: false,
+            position: 'default',
             wrapperW: 300,
             wrapperH: 300,
-            scale: 1 //比例缩放
+            scale: 1
         };
 
         this.colorMap = {
@@ -29,63 +26,42 @@
             b: 0,
             a: 1
         };
+
         this.r = 255;
         this.g = 255;
         this.b = 255;
 
-        this.h = 1;
-        this.s = 1;
-        this.l = 1;
         this.alpha = 1;
-
         this.hue = 0;
 
-        this.rgba = 'rgbah';
-        this.rgbaDomStack = [];
-
         this.size = 256;
-        this.wheelSize = 8;
-        this.selectSize = 3;
+        this.wheelOffset = 8;
+        this.selectOffset = 3;
+        this.rgba = 'rgba#';
+        this.rgbaDomList = [];
 
         var params = colorExtend(defaults, options);
 
-        this.scale = params.scale;
+        this.position = params.position;
+
+        this.x = 0;
+        this.y = 0;
 
         this.left = this.dom.offsetLeft;
         this.top = this.dom.offsetTop + params.h;
 
-        this.ui = this.buildColorPicker(params);
-        this.initColorPicker(params);
-    };
+        this.ui = this.initColorPickerUI(params);
+
+        this.renderColorPicker(params);
+    };  
 
     ColorPicker.prototype = {
 
         constructor: ColorPicker,
 
-        changeXYValue: function (e) {
+        initColorPickerUI: function (params) {
 
-            var e = e || window.event,
-
-                scale = self.scale,
-
-                page = {
-                    X: e.pageX,
-                    Y: e.pageY
-                },
-                x = (page.X - self.left - 6 - self.wheelSize) * scale,
-                y = (page.Y - self.top - 47 - self.wheelSize) * scale;
-
-            var color = {
-                x: self.limitValue(x / 255, 0, 1),
-                y: 1 - self.limitValue(y / 255, 0, 1)
-            };
-
-        },
-
-        buildColorPicker: function (params) {
-
-            var self = this,
-                colorWrapper = getDom('div', 'color-wrapper'),
+            var colorWrapper = getDom('div', 'color-wrapper'),
                 colorTitle = getDom('div', 'color-title'),
                 colorClosed = getDom('span', 'color-closed'),
                 colorMaskParent = getDom('div', 'color-mask-parent'),
@@ -100,45 +76,44 @@
             colorTitle.appendChild(colorClosed);
             colorbar.appendChild(colorSelector);
 
-            var rgb = self.colorMap.r + ',' + self.colorMap.g + ',' + self.colorMap.b;
+            var rgb = this.colorMap.r + ',' + this.colorMap.g + ',' + this.colorMap.b;
             colorMask.style.background = 'rgb(' + rgb + ')';
 
             if (params.showRgbProps) {
                 colorPanel = getDom('div', 'color-hex-panel');
                 var colorbg = getDom('div', 'color-hex-bg');
 
-                colorbg.style.background = 'rgb(' + self.r + ',' + self.g + ',' + self.b + ')';
+                colorbg.style.background = 'rgb(' + this.r + ',' + this.g + ',' + this.b + ')';
                 colorPanel.appendChild(colorbg);
-                for (var i = 0; i < self.rgba.length; i++) {
+                for (var i = 0; i < this.rgba.length; i++) {
 
                     var colorRow = getDom('div', 'color-hex-row'),
                         colorKey = getDom('span', 'color-hex-key'),
                         colorValue = getDom('input', 'color-hex-value');
 
-                    colorKey.textContent = self.rgba[i] + ':';
-                    colorValue.className += ' ' + self.rgba[i] + 'hex';
+                    colorKey.textContent = this.rgba[i] + ':';
+                    colorValue.className += ' ' + this.rgba[i] + 'hex';
                     colorValue.type = 'text';
 
-                    self.rgbaDomStack.push(colorValue);
+                    this.rgbaDomList.push(colorValue);
                     add(colorRow, [colorKey, colorValue]);
 
                     colorPanel.appendChild(colorRow);
                 }
 
-                self.rgbaDomStack[0].value = self.r;
-                self.rgbaDomStack[1].value = self.g;
-                self.rgbaDomStack[2].value = self.b;
-                self.rgbaDomStack[3].value = self.alpha;
-                self.rgbaDomStack[4].value = torgb(self.r, self.g, self.b);
+                this.rgbaDomList[0].value = this.r;
+                this.rgbaDomList[1].value = this.g;
+                this.rgbaDomList[2].value = this.b;
+                this.rgbaDomList[3].value = this.alpha;
+                this.rgbaDomList[4].value = this.torgb(this.r, this.g, this.b);
             }
 
-            colorWheel.style.left = - this.wheelSize + 'px';
-            colorWheel.style.top = - this.wheelSize + 'px';
+            colorWheel.style.left = - this.wheelOffset + 'px';
+            colorWheel.style.top = - this.wheelOffset + 'px';
 
             add(colorMaskParent, [colorBoard, colorMask, colorWheel]);
 
             add(colorWrapper, [colorTitle, colorMaskParent, colorbar, colorPanel]);
-
             return {
                 wrapper: colorWrapper,
                 title: colorTitle,
@@ -156,33 +131,27 @@
                 value: colorValue
             };
         },
-        initColorPicker: function (params) {
+
+        renderColorPicker: function (params) {
 
             var self = this;
-
-            if (params.changeTargetBg) {
-                self.dom.style.background = '#ffffff';
-                self.dom.style.border = '1px solid #000';
-                self.dom.style.cursor = 'default';
+            if (params.showTargetBg) {
+                this.dom.value = '';                                
             } else {
-
-                self.dom.value = '#ffffff';
+                this.dom.style.background = '#ffffff';
+                this.dom.style.border = '1px solid #000';
+                this.dom.style.cursor = 'default';
             }
 
             document.body.oncontextmenu = function (e) {
                 e.preventDefault();
-            }
+            };
 
-            self.setPosition(params);
+            this.setPosition(params);
 
-            // self.removeEvent([self.ui.title, self.ui.wheel, self.ui.board], 'mousedown', self.dragMove.bind(self)); 
-
-            if (!(self.ui.wrapper in document.body)) {
-
-                self.dom.onfocus = function () {
-
+            if (!(this.ui.wrapper in document.body)) { 
+                self.dom.onfocus = function () { 
                     document.body.appendChild(self.ui.wrapper);
-
                     // document.removeEventListener('mousedown', clearWrapper);
                     // document.addEventListener('mousedown', clearWrapper, false);
 
@@ -202,63 +171,54 @@
                     //         document.removeEventListener('mousedown', clearWrapper);                            
                     //     }
                     // }
-
                     if (params.dragMove) {
                         // self.addEvent([self.ui.title], 'mousedown', self.dragMove.bind(self));
                         self.wrapperDragMove(self.ui.title, self.ui.wrapper);
                     }
-                    self.wheelDragMove(self.ui.board, self.ui.wheel, params);
-                    // self.addEvent([self.ui.wheel, self.ui.board], 'mousedown', self.dragMove.bind(self));
-                };
+                     self.wheelDragMove(self.ui.board, self.ui.wheel, params);
+                }
 
-                self.selectDragMove(self.ui.bar, self.ui.selector, params.showRgbProps);
-
-                self.ui.closed.onclick = function () {
-                    self.dom.blur();
-                    document.body.removeChild(self.ui.wrapper);
-                    self.left = self.dom.offsetLeft;
-                    self.top = self.dom.offsetTop + params.h;
-
-                    self.ui.wrapper.style.left = self.left + 'px';
-                    self.ui.wrapper.style.top = self.top + 'px';
-                };
+                self.selectDragMove(self.ui.bar, self.ui.selector, params);
             }
-
         },
 
         setPosition: function (params) {
-            var self = this;
             switch (params.position) {
-                case 'left bottom':
-                    self.ui.wrapper.style.left = (self.left - 1) + 'px';
-                    self.ui.wrapper.style.top = self.top + 'px';
+                case 'l b':
+                    this.ui.wrapper.style.left = (this.left - 1) + 'px';
+                    this.ui.wrapper.style.top = this.top + 'px';
                     break;
-                case 'right bottom':
-                    self.left = self.left - window.outerWidth * .1;
-                    self.ui.wrapper.style.left = self.left + 'px';
-                    self.ui.wrapper.style.top = self.top + 'px';
+                case 'r b':
+                    this.left = this.left - window.outerWidth * .1;
+                    this.ui.wrapper.style.left = this.left + 'px';
+                    this.ui.wrapper.style.top = this.top + 'px';
                     break;
-                case 'left top':
-                    self.top = self.top - params.wrapperH - 40;
-                    self.ui.wrapper.style.left = (self.left - 1) + 'px';
-                    self.ui.wrapper.style.top = self.top + 'px';
+                case 'l t':
+                    this.top = this.top - params.wrapperH - 40;
+                    this.ui.wrapper.style.left = (this.left - 1) + 'px';
+                    this.ui.wrapper.style.top = this.top + 'px';
                     break;
-                case 'right top':
-                    self.top = self.top - params.wrapperH - 40;
-                    self.left = self.left - window.outerWidth * .1;
-                    self.ui.wrapper.style.left = (self.left - 1) + 'px';
-                    self.ui.wrapper.style.top = self.top + 'px';
+                case 'r t':
+                    this.top = this.top - params.wrapperH - 40;
+                    this.left = this.left - window.outerWidth * .1;
+                    this.ui.wrapper.style.left = (this.left - 1) + 'px';
+                    this.ui.wrapper.style.top = this.top + 'px';
+                    break;
+                default:
+                    var w = this.ui.wrapper.clientWidth;
+                    var h = this.ui.wrapper.clientHeight;
+                    var ww = window.outerWidth/2;
+                    var wh = window.outerHeight/2;
+                    this.ui.wrapper.left = (ww - w) + 'px';
+                    this.ui.wrapper.top = (wh - h) + 'px';
                     break;
             }
-
         },
 
         wrapperDragMove: function (clickTarget, moveTarget) {
+
             var self = this;
-
-            var disX = 0, disY = 0;
-
-            clickTarget.addEventListener('mousedown', onMouseDown, false);;
+            clickTarget.addEventListener('mousedown', onMouseDown, false);
 
             function onMouseDown(e) {
 
@@ -305,169 +265,51 @@
         },
 
         wheelDragMove: function (clickTarget, moveTarget, params) {
-
             var self = this;
-
             clickTarget.addEventListener('mousedown', onMouseDown, false);
-
             moveTarget.addEventListener('mousedown', onMouseDown, false);
 
             function onMouseDown(e) {
 
-                var disX = e.pageX - self.left - 6 - self.wheelSize;
+                var disX = e.pageX - self.left - 6 - self.wheelOffset;
 
-                var disY = e.pageY - self.top - 47 - self.wheelSize;
+                var disY = e.pageY - self.top - 47 - self.wheelOffset;
 
-
+                self.x = disX;
+                self.y = disY;
                 moveTarget.style.left = disX + 'px';
                 moveTarget.style.top = disY + 'px';
 
-
-                if (params.showRgbProps) {
-                    //rgbPanels如果显示了,计算rgb值 ...                    
-                }
-
-                var l = 255 - (disX + self.wheelSize) >= 255 ? 255 : disX + self.wheelSize >= 0 ? 0 : disX + self.wheelSize;
-                var s = 255 - (disY + self.wheelSize) >= 255 ? 255 : disY + self.wheelSize >= 0 ? 0 : disY + self.wheelSize;
-                var h = (360 / 256) * self.hue
-
-                changeRgb();
-                function changeRgb() {
-                    var r = self.r,
-                        g = self.g,
-                        b = self.b;
-                    /**                   
-                     *   |-----------------| y(0-256)  | z (2-360) 
-                     *   |                 |明度        | 色相
-                     *   |                 |           |
-                     *   |      o----------|           |
-                     *   |      |          |           |
-                     *   |      |          |           |
-                     *   |______|__________|           |
-                     *  x(0-256)饱和        (0, 0)   (原点)
-                     */
-                    // var h = 360/255, s = 100/256, l = 100/256;
-
-                    // var xyX = disX + self.wheelSize;
-                    // var xyY = disY + self.wheelSize;
-
-                    // xyX = xyX <= 0 ? 0 : xyX > 255 ? 255 : xyX;
-                    // xyY = xyY <= 0 ? 0 : xyY > 255 ? 255 : xyY;
-
-                    // var hs = h * 0;
-                    // var ss = s * xyX / 100;
-                    // var ls = l * xyY / 100;
-
-                    // var rgba = self.HSLtoRGB(hs, ss, ls, 1);
-
-                    // var scope = 256/6 | 0;
-                    // if (self.hue <= scope) {
-                    //     r = 255 - (disY + self.wheelSize) + 1;
-                    //     g = (255 - 1/256 * (disX+disY) * 2 * 100 | 0);
-                    //     g = r - Math.abs(g - r);
-                    //     b = g - self.hue;
-                    //  } else if (self.hue <= scope * 2) {
-                    //     b = 255 - (disY + self.wheelSize) + 1 - self.hue;
-                    //     r = (255 - 1/256 * (disX+disY) * 2 * 100 | 0);
-                    //     r = b - Math.abs(r - b);
-                    //     g = b;
-                    //  }
-
-                    // var h = 1 / 256 * (disY + 8 + 1) * 2 * 360;
-                    var h = self.hue;
-                    var v = (100 - 1 / 256 * (disY + 8) * 100 | 0);
-
-                    var _s = (disX + 8)/256 * 100;                    
-                    var s =  _s | 0;
-
-                    function torgb(h, s, v){
-                        var h = h / 360 * 6,
-                            s = s / 100,
-                            v = v / 100,
-                            i = ~~h,
-                            f = h - i,
-                            p = v * (1 - s),
-                            q = v * (1 - f * s),
-                            t = v * (1 - (1 - f) * s),
-                            mod = i % 6;
-                        return {
-                            r: [v, q, p, p, t, v][mod],
-                            g: [t, v, v, q, p, p][mod],
-                            b: [p, p, t, v, v, q][mod]
-                        };
-                    }   
-                    var colorRgb = torgb(h,s,v);
-                    r = Math.abs(limitValue(colorRgb.r, 0, 1) * 255) | 0;
-                    g = Math.abs(limitValue(colorRgb.g, 0, 1) * 255) | 0;
-                    b = Math.abs(limitValue(colorRgb.b, 0, 1) * 255) | 0;
-
-                    self.r = r;
-                    self.g = g;
-                    self.b = b;
-
-
-                    if (params.showRgbProps) {  
-
-                        var rgb = r + ',' + g + ',' + b;                        
-
-                        var rhex = self.rgbaDomStack[0];
-                        var ghex = self.rgbaDomStack[1];
-                        var bhex = self.rgbaDomStack[2];
-                                                
-                        rhex.value = r;
-
-                        ghex.value = g;
-
-                        bhex.value = b;
-
-                        self.ui.bg.style.background = 'rgb(' + rgb + ')';
-
-                    }
-
-
-
-                }
+                self.update(disX, disY, params);
 
                 document.addEventListener('mousemove', onMouseMove, false);
                 document.addEventListener('mouseup', onMouseUp, false);
 
                 function onMouseMove(e) {
 
-                    disX = e.pageX - self.left - 6 - self.wheelSize;
-
-                    disY = e.pageY - self.top - 47 - self.wheelSize;
-
-                    if (disX < - self.wheelSize) {
-
-                        disX = - self.wheelSize
-
-                    } else if (disX > self.size - self.wheelSize) {
-
-                        disX = self.size - self.wheelSize
-
+                    disX = e.pageX - self.left - 6 - self.wheelOffset;
+                    disY = e.pageY - self.top - 47 - self.wheelOffset;
+                    if (disX < - self.wheelOffset) {
+                        disX = - self.wheelOffset
+                    } else if (disX > self.size - self.wheelOffset) {
+                        disX = self.size - self.wheelOffset
                     }
 
-                    if (disY < - self.wheelSize) {
-
-                        disY = - self.wheelSize
-
-                    } else if (disY > self.size - self.wheelSize) {
-
-                        disY = self.size - self.wheelSize
-
+                    if (disY < - self.wheelOffset) {
+                        disY = - self.wheelOffset
+                    } else if (disY > self.size - self.wheelOffset) {
+                        disY = self.size - self.wheelOffset
                     }
 
-                    self.update(disX, disY, self.hue, self.size / 6 | 0);
+                    // self.update(disX, disY, self.hue, self.size / 6 | 0);
 
-                    x = limitValue(disX / 255, 0, 1);
-                    y = 1 - limitValue(disY / 255, 0, 1);
-                    z = 1 - limitValue((e.pageY - disY) / 255, 0, 1);
-                    changeRgb(x, y, z);
+                    // x = limitValue(disX / 255, 0, 1);
+                    // y = 1 - limitValue(disY / 255, 0, 1);
+                    // z = 1 - limitValue((e.pageY - disY) / 255, 0, 1);
+                    self.update(disX, disY, params);
 
                     moveTarget.style.left = disX + 'px';
-
                     moveTarget.style.top = disY + 'px';
-
                 }
 
                 function onMouseUp() {
@@ -475,11 +317,10 @@
                     document.removeEventListener('mouseup', onMouseUp);
                 }
 
-            }
-
+            }            
         },
 
-        selectDragMove: function (clickTarget, moveTarget, rgbPanels) {
+        selectDragMove: function (clickTarget, moveTarget, params) {
 
             var self = this;
             clickTarget.addEventListener('mousedown', onMouseDown, false);
@@ -487,31 +328,25 @@
             function onMouseDown(e) {
 
                 var top = self.ui.bar.offsetTop;
-
                 var t = self.top + top;
-
                 var scope = self.size / 6 | 0; //分区                
-
-                //计算rgb
-                // var disX = 0, disY = 0;
 
                 var disX = self.ui.wheel.offsetLeft + self.wheelSize;
                 var disY = self.ui.wheel.offsetTop + self.wheelSize;
 
-                var y = e.pageY - t - self.selectSize;
+                var y = e.pageY - t - self.selectOffset;
 
                 var h = 360 / 256;  
-                self.hue =  360 - Math.round((y + self.selectSize) * h);  
-                console.log(self.r)
-                self.toRgbColor(disX, disY, y, scope);
 
-                self.update(disX, disY, y, scope);
+                self.hue =  360 - Math.round((y + self.selectOffset) * h);  
+               
+                self.sethue(disX, disY, y, scope);
 
-                if (rgbPanels) {
-                    //...
-                }
+                self.update(self.x, self.y, params);
 
                 moveTarget.style.top = y + 'px';
+
+                
 
                 document.addEventListener('mousemove', onMouseMove, false);
                 document.addEventListener('mouseup', onMouseUp, false);
@@ -521,25 +356,21 @@
                     disX = self.ui.wheel.offsetLeft + self.wheelSize;
                     disY = self.ui.wheel.offsetTop + self.wheelSize;
 
-                    y = e.pageY - t - self.selectSize;
+                    y = e.pageY - t - self.selectOffset;
 
-                    if (y < - self.selectSize) {
-                        y = - self.selectSize;
-                    } else if (y > self.size - self.selectSize) {
-                        y = self.size - self.selectSize;
+                    if (y < - self.selectOffset) {
+                        y = - self.selectOffset;
+                    } else if (y > self.size - self.selectOffset) {
+                        y = self.size - self.selectOffset;
                     }
 
-                    self.hue =  360 - Math.round((y + self.selectSize) * h); 
-                    self.toRgbColor(disX, disY, y, scope);
-                    self.update(disX, disY, y, scope);
+                    self.hue =  360 - Math.round((y + self.selectOffset) * h); 
+                    self.sethue(disX, disY, y, scope);
+                    self.update(self.x, self.y, y, scope);
 
                     var rgb = self.r + ',' + self.g + ',' + self.b;
 
                     self.ui.bg.style.background = 'rgb('+rgb+')';
-
-                    if (rgbPanels) {
-                        //...
-                    }
 
                     moveTarget.style.top = y + 'px';
 
@@ -555,31 +386,61 @@
             }
 
         },
+        
+        update: function (disX, disY, params) {
+            var self = this;
+            var r = self.r,
+                g = self.g,
+                b = self.b;
+            /**                   
+             *   |-----------------| y(0-256)  | z (2-360) 
+             *   |                 |明度        | 色相
+             *   |                 |           |
+             *   |      o----------|           |
+             *   |      |          |           |
+             *   |      |          |           |
+             *   |______|__________|           |
+             *  x(0-256)饱和        (0, 0)   (原点)
+             */
+            var h = self.hue;
+            var v = (100 - 1 / self.size * (disY + self.wheelOffset) * 100 | 0);
+            var _s = (disX + self.wheelOffset)/self.size * 100;                    
+            var s =  _s | 0;
 
-        update: function (x, y, h, scope) {
+            var colorRgb = self.hsv2rgb(h,s,v);
+            // r = Math.abs(self.limitValue(colorRgb.r, 1, 0) * 255) | 0;
+            // g = Math.abs(self.limitValue(colorRgb.g, 1, 0) * 255) | 0;
+            // b = Math.abs(self.limitValue(colorRgb.b, 1, 0) * 255) | 0;
+            r = Math.round(Math.abs(self.limitValue(colorRgb.r, 1, 0) * 255));
+            g = Math.floor(Math.abs(self.limitValue(colorRgb.g, 1, 0) * 255));
+            b = Math.floor(Math.abs(self.limitValue(colorRgb.b, 1, 0) * 255));
 
-            // console.log(x, y, h, scope);
-            var h = h,
-                s = x / 100,
-                l = y / 100;
+            self.r = r;
+            self.g = g;
+            self.b = b;
 
-            var r, g, b;
-            // console.log(h, s, l);
-            if (h <= 0) {
+            var color = self.torgb(r, g, b);
 
-                r = 255 - l * y;
-                g = 255 - x * 100;
-                b = 255 - y * 100;
+            if (params.showRgbProps) {  
+                var rgb = r + ',' + g + ',' + b;                        
+                var rhex = self.rgbaDomList[0];
+                var ghex = self.rgbaDomList[1];
+                var bhex = self.rgbaDomList[2];
+                var hex = self.rgbaDomList[4];
+                rhex.value = r;
+                ghex.value = g;
+                bhex.value = b;
+                hex.value = color.substring(1);
+                self.ui.bg.style.background = 'rgb(' + rgb + ')';
             }
-            return {
-                r: r,
-                g: g,
-                b: b
-            };
+            if (params.showTargetBg) {
+                self.dom.style.background = color;
+            } else {
+                self.dom.value = color;                               
+            }
         },
 
-        toRgbColor: function (x, y, t, scope) {
-
+        sethue: function (x, y, t, scope) {
             /**
              * [0-6]    this.B++ rgb[255, 0, 0~255];
              * [6-12]   this.R-- rgb[255~0, 0, 255];
@@ -588,11 +449,8 @@
              * [24-36]  this.R++ rgb[0~255, 0, 255];
              * [36-0]   this.G--, this.B-- rgb[255, 255~0, 255~0];
              * */
-
             var self = this;
-
             var min, max, rgb = '';
-
             if (t <= -3) {
                 self.r = 255;
                 self.g = 0;
@@ -642,7 +500,7 @@
                 self.g = 0;
                 self.b = 0;
             }
-
+            
             rgb = self.r + ',' + self.g + ',' + self.b;
 
             // console.log(rgb);
@@ -657,83 +515,45 @@
             // self.dom.value = '#' + initHex(self.r) +
             //     initHex(self.g) +
             //     initHex(self.b);
-
         },
 
-        HueToRGB: function (p, q, h) {
-            if (h < 0)
-                h += 1;
-            else if (h > 1)
-                h -= 1;
-
-            if ((h * 6) < 1)
-                return p + (q - p) * h * 6;
-            else if ((h * 2) < 1)
-                return q;
-            else if ((h * 3) < 2)
-                return p + (q - p) * ((2 / 3) - h) * 6;
-            else
-                return p;
+        hsv2rgb: function (h, s, v) {
+            var h = h / 360 * 6,
+                s = s / 100,
+                v = v / 100,
+                i = ~~h,
+                f = h - i,
+                p = v * (1 - s),
+                q = v * (1 - f * s),
+                t = v * (1 - (1 - f) * s),
+                mod = i % 6;
+            return {
+                r: [v, q, p, p, t, v][mod],
+                g: [t, v, v, q, p, p][mod],
+                b: [p, p, t, v, v, q][mod]
+            };
         },
 
-        HSLtoRGB: function (h, s, l, a) {
-
-            if (s < 0)
-                s = 0;
-
-            if (l <= 0.5)
-                var q = l * (1 + s);
-            else
-                var q = l + s - (l * s);
-
-            var p = 2 * l - q;
-
-            var tr = h + (1 / 3);
-            var tg = h;
-            var tb = h - (1 / 3);
-
-            r = Math.round(this.HueToRGB(p, q, tr) * 255);
-            g = Math.round(this.HueToRGB(p, q, tg) * 255);
-            b = Math.round(this.HueToRGB(p, q, tb) * 255);
-            return [r, g, b, a || 1];
-        },
-        addEvent: function (doms, event, fn) {
-
-            for (var i = 0, l = doms.length; i < l; i++) {
-                if (doms[i]) {
-                    doms[i].addEventListener(event, fn, false);
-                }
-            }
-
+        limitValue: function (value, max, min) {
+            return (value > max ? max : value < min ? min : value);
         },
 
-        removeEvent: function (doms, eventm, fn) {
-            for (var i = 0, l = doms.length; i < l; i++) {
-                if (doms[i]) {
-                    doms[i].removeEventListener(event, fn);
-                }
-            }
+        hex2: function (hex) {
+            return (hex.length < 2 ? '0' : '') + hex.toString(16);
+        },
+
+        torgb: function (r, g, b) {
+            return '#' + this.hex2(r) + this.hex2(g) + this.hex2(b);
         }
+        
 
     };
 
-    function limitValue(value, min, max) {
-        return (value > max ? max : value < min ? min : value);
+    function to2 (n) {
+        return (parent(n) > 9) ? n : '0' + n;
     }
 
-    function to2(n) {
-        return (parseInt(n) > 9) ? n : '0' + n;
-    }
-
-    function hex2(hex) {
-        return (hex.length < 2 ? '0' : '') + hex.toString(16);
-    }
-
-    function torgb(r, g, b) {
-        return '#' + hex2(r) + hex2(g) + hex2(b);
-    }
-
-    function colorExtend(target, options) {
+    function colorExtend (target, options) {
         for (var prop in target) {
             if (options.hasOwnProperty(prop)) {
                 target[prop] = options[prop];
@@ -742,7 +562,7 @@
         return target;
     }
 
-    function getDom(dom, className) {
+    function getDom (dom, className) {
         var domEle = document.createElement(dom);
         domEle.className = className;
         return domEle;
@@ -750,7 +570,6 @@
 
     function add(parent, doms) {
         var i = 0, l = doms.length;
-
         for (; i < l; i++) {
             if (doms[i]) {
                 parent.appendChild(doms[i]);
@@ -759,5 +578,4 @@
     }
 
     window.ColorPicker = ColorPicker;
-
 })();
