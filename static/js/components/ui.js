@@ -1,5 +1,4 @@
 /**
- * @author: misliu
  * @desc ui - a build ui component;
 */
 
