@@ -374,22 +374,11 @@
                     //  }
 
                     // var h = 1 / 256 * (disY + 8 + 1) * 2 * 360;
-
-                    var h = 360;
+                    var h = self.hue;
                     var v = (100 - 1 / 256 * (disY + 8) * 100 | 0);
-                    var ofl = disX;
-                    var oft = disY;
-                    if (disX > disY && disX > 128) {
-                        ofl = disX - 128;
-                    }
 
-                    if (disY > disX && disY > 128) {
-                        oft = disY - 128;
-                    }
-
-                    var _s = (disX + disY - 16) / 256;
-                    _s = _s > 1 ? _s * 50 : _s * 100;
-                    var s =  _s + 7 | 0;
+                    var _s = (disX + 8)/256 * 100;                    
+                    var s =  _s | 0;
 
                     function torgb(h, s, v){
                         var h = h / 360 * 6,
@@ -407,34 +396,31 @@
                             b: [p, p, t, v, v, q][mod]
                         };
                     }   
-                    console.log(h,s,v);                                                                                
                     var colorRgb = torgb(h,s,v);
                     r = Math.abs(limitValue(colorRgb.r, 0, 1) * 255) | 0;
                     g = Math.abs(limitValue(colorRgb.g, 0, 1) * 255) | 0;
                     b = Math.abs(limitValue(colorRgb.b, 0, 1) * 255) | 0;
-                    // console.log(r,g,b);                                                                                
-                    var rgb = r + ',' + g + ',' + b;
-                    // console.log(rgb);                                        
-                    document.body.style.background = 'rgb(' + rgb + ')';
-                    // if (hue )
 
-                    if (params.showRgbProps) {
+                    self.r = r;
+                    self.g = g;
+                    self.b = b;
+
+
+                    if (params.showRgbProps) {  
+
+                        var rgb = r + ',' + g + ',' + b;                        
 
                         var rhex = self.rgbaDomStack[0];
                         var ghex = self.rgbaDomStack[1];
                         var bhex = self.rgbaDomStack[2];
+                                                
+                        rhex.value = r;
 
-                        rhex.value = self.colorMap.r;
+                        ghex.value = g;
 
-                        ghex.value = self.colorMap.g;
+                        bhex.value = b;
 
-                        bhex.value = self.colorMap.b;
-
-                        var bg = self.colorMap.r + ',' + self.colorMap.g + ',' + self.colorMap.b;
-
-                        // console.log(bg);
-
-                        self.ui.bg.style.background = 'rgb(' + bg + ')';
+                        self.ui.bg.style.background = 'rgb(' + rgb + ')';
 
                     }
 
@@ -514,10 +500,9 @@
 
                 var y = e.pageY - t - self.selectSize;
 
-                var h = 360 / 255;
-
-                // self.hue = Math.round((y + self.selectSize) * h);  
-
+                var h = 360 / 256;  
+                self.hue =  360 - Math.round((y + self.selectSize) * h);  
+                console.log(self.r)
                 self.toRgbColor(disX, disY, y, scope);
 
                 self.update(disX, disY, y, scope);
@@ -544,9 +529,13 @@
                         y = self.size - self.selectSize;
                     }
 
-                    self.hue = Math.round((y + self.selectSize) * h);
+                    self.hue =  360 - Math.round((y + self.selectSize) * h); 
                     self.toRgbColor(disX, disY, y, scope);
                     self.update(disX, disY, y, scope);
+
+                    var rgb = self.r + ',' + self.g + ',' + self.b;
+
+                    self.ui.bg.style.background = 'rgb('+rgb+')';
 
                     if (rgbPanels) {
                         //...
