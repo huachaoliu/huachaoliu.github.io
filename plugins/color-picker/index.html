@@ -11,14 +11,14 @@
 <body>
 
     <div class="navbar">
-        <span>index >> </span>
-        <span class="example">example</span>
+        <span>color-picker </span>
+        <span class="example">example »</span>
     </div>
 
     <div class="container">
 
         <input type="text" id="color-picker" class="color-picker" color-root="input">        
-        <!--<input class="color" value="#B6BD79" />-->
+        <input type="text" id="color-pickergb" class="color-picker" color-root="input">        
 
     </div>
     <script>
@@ -30,6 +30,14 @@
             custombg: 'w'
         });
 
+        new ColorPicker(document.getElementById('color-pickergb'), {
+            dragMove: true,
+            showRgb: true,
+            targetbg: '#000',
+            showTargetBg: true,
+            position: 'l b',
+            custombg: 'w'
+        });
     </script>
 </body>
 </html>

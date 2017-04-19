@@ -69,7 +69,25 @@
             var self = this;
             if (params.showTargetBg) {
                 this.dom.value = '';
-                this.dom.style.background = params.targetbg;                
+                this.dom.style.background = params.targetbg;    
+                //TODO: 根据初始的hex值计算wheel的x, y坐标；
+                // var hex = params.targetbg.substring(1), r, g, b;
+                // if (hex.length < 6) {
+                //     r = hex.substring(0, 1),
+                //     g = hex.substring(1, 2),
+                //     b = hex.substring(2, 3);
+                // } else {
+                //     r = hex.substring(0, 2),
+                //     g = hex.substring(2, 4),
+                //     b = hex.substring(4, 6);
+                // }
+                
+                // r.toString(10);
+                // g.toString(10);
+                // b.toString(10);
+                // console.log(r,g,b);
+
+                // self.update(this.x, this.y, params);
             }
 
             if (!(this.ui.wrapper in document.body)) {
@@ -124,9 +142,9 @@
                 if (params.showRgb) {
                     var ahex = this.rgbaDoms[3];
                     ahex.onchange = function (e) {
-                        if (e.target.value < 1 && e.target.value > 0) {
-                            // self.alpha = e.target.value;
-                            // self.updatePanel(self.r, self.g, self.b);
+                        if (e.target.value <= 1 && e.target.value >= 0) {
+                            self.alpha = (e.target.value * 100 | 0) / 100;
+                            self.updatePanel(self.r, self.g, self.b);
                         }
                     
                     };
@@ -402,13 +420,15 @@
             g = Math.floor(Math.abs(self.limitValue(colorRgb.g, 1, 0) * 255));
             b = Math.floor(Math.abs(self.limitValue(colorRgb.b, 1, 0) * 255));
 
+            var rgba = r + ',' + g + ',' + b + ',' + self.alpha;
+            
             var color = self.torgb(r, g, b);
             if (params.showRgb) {
                 self.updatePanel(r, g, b);
+                this.ui.bg.style.background = 'rgba(' + rgba + ')';                
             }
 
             if (params.showTargetBg) {
-                var rgba = r + ',' + g + ',' + b + ',' + self.alpha;
                 self.dom.style.background = 'rgba('+rgba+')';
             } else {
                 self.dom.value = color;
@@ -417,7 +437,7 @@
 
         updatePanel: function (r, g, b) {
             var color = this.torgb(r, g, b);
-            var rgba = r + ',' + g + ',' + b + ',' + self.alpha;
+            var rgba = r + ',' + g + ',' + b + ',' + this.alpha;
             var rhex = this.rgbaDoms[0];
             var ghex = this.rgbaDoms[1];
             var bhex = this.rgbaDoms[2];
@@ -432,12 +452,11 @@
             bhex.style.backgroundPositionX =  - (255 - b)/5 + 'px';
             ahex.style.backgroundPositionX = - (1 - this.alpha) * 51 + 'px';            
             hex.value = color.substring(1);
-            
+            this.ui.bg.style.background = 'rgba(' + rgba + ')';
+            this.dom.style.background = 'rgba('+rgba+')';
             this.r = r;
             this.g = g;
             this.b = b;
-
-            this.ui.bg.style.background = 'rgba(' + rgba + ')';
         },
 
         hsv2rgb: function (h, s, v) {
@@ -521,7 +540,9 @@
                     colorKey.textContent = this.rgba[i] + ':';
                     colorValue.className += ' ' + this.rgba[i] + 'hex';
                     colorValue.type = 'text';
-
+                    if (this.rgba[i] === 'a') {
+                        colorValue.maxLength = 3;
+                    }
                     this.rgbaDoms.push(colorValue);
 
                     add(colorRow, [colorKey, colorValue]);

@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "gulp && python -m SimpleHTTPServer 10000",
-    "dev": "node src/server/app.js",
+    "dev": "node server/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
