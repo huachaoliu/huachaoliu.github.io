@@ -22,12 +22,12 @@
 
     </div>
     <script>
-
-        new ColorPicker('color-picker', {
+        new ColorPicker(document.getElementById('color-picker'), {
             dragMove: true,
-            showRgbProps: true,
-            showTargetBg: false,
-            position: 'l b'
+            showRgb: false,
+            showTargetBg: true,
+            position: 'l b',
+            custombg: 'w'
         });
 
     </script>

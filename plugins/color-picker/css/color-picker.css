@@ -1,3 +1,9 @@
+body{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 .color-picker{
     width: 100px;
     height: 20px;
@@ -109,10 +115,13 @@
 }
 
 .color-hex-panel{
-    width: 78px;
+    /*width: 78px;*/
+    width: 81px;
     height: 236px;
     float: left;
     padding: 10px 20px;
+    margin-left: 5px;
+    background: #333;
 }
 
 .color-hex-bg{
@@ -124,7 +133,7 @@
 .color-hex-row{
     height: 40px;
     line-height: 40px;
-    color: #aaa;
+    color: #fafafa;
     font-weight: bold;
 }
 
@@ -132,10 +141,16 @@
     width: 26px;
     display: inline-block;
 }
-
 .color-hex-value{
-    width: 48px;
-    color: #aaa;
-    background: #333;
+    /*width: 48px;*/
+    width: 51px;
+    color: #fafafa;
+    background: #666;
     border-color: #666;
+    font-weight: bold;
+    background: url(../img/hexbg.jpg) no-repeat;
+}
+
+.color-hex-value.hhex {
+    background-image: none;
 }
