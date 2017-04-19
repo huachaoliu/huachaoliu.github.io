@@ -33,7 +33,7 @@
         };
 
         var params = colorExtend(defaults, options);
-        this.bg = { w: '#ffffff', b: '#333333', g: '#666666' };
+        this.bg = { w: '#ffffff', b: '#444444', g: '#666666' };
         
         this.dom = target;
         this.r = 255;
@@ -203,10 +203,15 @@
         },
 
         setWheelStyle: function (colorWheel) {
-            colorWheel.style.width = this.wheelOffset * 2 + 'px';
-            colorWheel.style.height = this.wheelOffset * 2 + 'px';
-            colorWheel.style.left = - this.wheelOffset + 'px';
-            colorWheel.style.top = - this.wheelOffset + 'px';
+            // colorWheel.style.width = this.wheelOffset * 2 + 'px';
+            // colorWheel.style.height = this.wheelOffset * 2 + 'px';
+            if (this.scale > 1) {
+                colorWheel.style.left = - this.wheelOffset * 2 + 'px';
+                colorWheel.style.top = - this.wheelOffset * 2 + 'px';
+            } else {
+                colorWheel.style.left = - this.wheelOffset + 'px';
+                colorWheel.style.top = - this.wheelOffset + 'px';
+            }
             // colorWheel.style.border = '1px solid #333';                
             // colorWheel.style.borderRadius = '50%';
         },
@@ -218,10 +223,12 @@
 
             function onMouseDown(e) {
                 e.preventDefault();
+                console.log(self.wheelOffset)
                 var disX = e.pageX - self.left - 6 - self.wheelOffset;
 
                 var disY = e.pageY - self.top - 42 - self.wheelOffset;
-
+                disX = self.scale > 1 ? disX - self.scale * 2 : disX;
+                disY = self.scale > 1 ? disY - self.scale * 2 + 6 : disY;                
                 self.x = disX;
                 self.y = disY;
 
@@ -243,12 +250,13 @@
                         disX = self.size - self.wheelOffset
                     }
 
-                    if (disY < - self.wheelOffset) {
-                        disY = - self.wheelOffset
-                    } else if (disY > self.size - self.wheelOffset) {
-                        disY = self.size - self.wheelOffset
+                    if (disY < - self.wheelOffset * self.scale - (self.scale > 1 ? 2 : 0)) {
+                        disY = - self.wheelOffset * self.scale - (self.scale > 1 ? 2 : 0) ;
+                    } else if (disY > self.size - self.wheelOffset * self.scale - (self.scale > 1 ? 2 : 0) ) {
+                        disY = self.size - self.wheelOffset * self.scale - (self.scale > 1 ? 2 : 0);
                     }
-
+                    disX = self.scale > 1 ? disX - self.scale * 2 : disX;
+                    disY = self.scale > 1 ? disY - self.scale * 2 + 6 : disY;   
                     self.x = disX;
                     self.y = disY;
 
@@ -275,16 +283,13 @@
                 var top = self.ui.bar.offsetTop;
                 var t = self.top + top;
                 var scope = self.size / 6 | 0; //分区                
-
                 var disX = self.ui.wheel.offsetLeft + self.wheelSize;
                 var disY = self.ui.wheel.offsetTop + self.wheelSize;
 
                 var y = e.pageY - t - self.hueOffset;
-
-                var h = 360 / 256;
-
+                var h = 360 / (256 / self.scale);
                 self.hue = 360 - Math.round((y + self.hueOffset) * h);
-
+                console.log(self.hue);
                 self.sethue(disX, disY, y, scope, params);
 
                 self.update(self.x, self.y, params);
@@ -305,7 +310,6 @@
                     } else if (y > self.size - self.hueOffset) {
                         y = self.size - self.hueOffset;
                     }
-
                     self.hue = 360 - Math.round((y + self.hueOffset) * h);
                     self.sethue(disX, disY, y, scope, params);
 
@@ -337,6 +341,7 @@
              * [24-36]  this.R++ rgb[0~255, 0, 255];
              * [36-0]   this.G--, this.B-- rgb[255, 255~0, 255~0];
              * */
+            t += 3;
             var min, max, rgb = '';
             var self = this;
             if (t <= - this.hueOffset) {
@@ -385,6 +390,7 @@
                 self.g = 0;
                 self.b = 0;
             }
+            console.log(t, 6*scope);
             rgb = self.r + ',' + self.g + ',' + self.b;
             self.ui.mask.style.background = 'rgb(' + rgb + ')';
 
@@ -492,8 +498,30 @@
 
         setBarStyle: function (colorbar) {
             colorbar.style.height = this.size + 'px';
+            if (this.scale > 1) {
+                colorbar.style.width = '12px';
+                colorbar.style.backgroundSize = '100% 1500%';                
+            }
+        },
+        setSelectStyle: function (selector) {
+            if (this.scale > 1) {
+                selector.style.width = '12px';
+            }
         },
 
+        setTitle: function (title) {
+            if (this.scale > 1) {
+                title.style.height = '24px';
+                title.style.lineHeight = '24px';
+                title.style.textIndent = '7px';
+            }
+        },
+
+        setClosed: function (closed) {
+            if (this.scale > 1) {
+                closed.style.margin = '2px 5px 0 0';
+            }
+        },
         initColorPickerUI: function (params) {
 
             var colorWrapper = getDom('div', 'color-wrapper'),
@@ -512,10 +540,12 @@
 
             //设置滚轮的样式
             this.setWrapperbg(colorWrapper, params);
+            this.setTitle(colorTitle);
+            this.setClosed(colorClosed);
             this.setWheelStyle(colorWheel);
             this.setBoardStyle(colorMaskParent);
             this.setBarStyle(colorbar);
-
+            this.setSelectStyle(colorSelector);
             colorbar.appendChild(colorSelector);
 
             var r = params.initColor.r,

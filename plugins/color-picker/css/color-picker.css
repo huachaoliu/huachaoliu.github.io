@@ -108,6 +108,7 @@ body{
     width: 20px;
     height: 7px;
     background: url(../img/bar-pointer.png) no-repeat;
+    background-size: contain;
     position: absolute;
     left: 0;    
     top: -3px;    

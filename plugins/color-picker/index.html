@@ -19,6 +19,7 @@
 
         <input type="text" id="color-picker" class="color-picker" color-root="input">        
         <input type="text" id="color-pickergb" class="color-picker" color-root="input">        
+        <input type="text" id="color-pickerscale" class="color-picker" color-root="input">        
 
     </div>
     <script>
@@ -37,6 +38,15 @@
             showTargetBg: true,
             position: 'l b',
             custombg: 'w'
+        });
+        new ColorPicker(document.getElementById('color-pickerscale'), {
+            dragMove: true,
+            showRgb: false,
+            targetbg: '#000',
+            showTargetBg: true,
+            position: 'l b',
+            custombg: 'b',
+            scale: 2
         });
     </script>
 </body>
