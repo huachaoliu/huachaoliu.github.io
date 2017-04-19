@@ -17,14 +17,17 @@
 
     <div class="container">
 
-        <input type="text" id="color-picker" class="color-picker" color-root="input" value="#ffffff">        
+        <input type="text" id="color-picker" class="color-picker" color-root="input">        
+        <!--<input class="color" value="#B6BD79" />-->
 
     </div>
     <script>
 
-        new ColorPicker('.color-picker', {
-            dragMoveWrapper: true,
-            rgbPanels: true
+        new ColorPicker('color-picker', {
+            dragMove: true,
+            showRgbProps: true,
+            showTargetBg: false,
+            position: 'l b'
         });
 
     </script>
