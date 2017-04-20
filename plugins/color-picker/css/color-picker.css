@@ -40,6 +40,7 @@ body{
     text-indent: 14px;
     font-size: 14px;
     color: #ff0063;
+    border: 1px solid;
 }
 
 .color-closed {
@@ -117,7 +118,7 @@ body{
 
 .color-hex-panel{
     /*width: 78px;*/
-    width: 81px;
+    width: 95px;
     height: 236px;
     float: left;
     padding: 10px;

@@ -203,8 +203,6 @@
         },
 
         setWheelStyle: function (colorWheel) {
-            // colorWheel.style.width = this.wheelOffset * 2 + 'px';
-            // colorWheel.style.height = this.wheelOffset * 2 + 'px';
             if (this.scale > 1) {
                 colorWheel.style.left = - this.wheelOffset * 2 + 'px';
                 colorWheel.style.top = - this.wheelOffset * 2 + 'px';
@@ -223,7 +221,6 @@
 
             function onMouseDown(e) {
                 e.preventDefault();
-                console.log(self.wheelOffset)
                 var disX = e.pageX - self.left - 6 - self.wheelOffset;
 
                 var disY = e.pageY - self.top - 42 - self.wheelOffset;
@@ -289,7 +286,6 @@
                 var y = e.pageY - t - self.hueOffset;
                 var h = 360 / (256 / self.scale);
                 self.hue = 360 - Math.round((y + self.hueOffset) * h);
-                console.log(self.hue);
                 self.sethue(disX, disY, y, scope, params);
 
                 self.update(self.x, self.y, params);
@@ -390,7 +386,6 @@
                 self.g = 0;
                 self.b = 0;
             }
-            console.log(t, 6*scope);
             rgb = self.r + ',' + self.g + ',' + self.b;
             self.ui.mask.style.background = 'rgb(' + rgb + ')';
 
@@ -522,6 +517,18 @@
                 closed.style.margin = '2px 5px 0 0';
             }
         },
+
+        setPanelStyle: function (panel, bg, row, value) {
+            if (this.scale > 1) {
+                panel.style.height = '108px';
+                bg.style.height = '12px';
+                row.style.height = '18px';
+                row.style.lineHeight = '18px';
+                value.style.fontSize = '12px';
+                value.style.lineHeight = '16px';
+            }
+        },
+
         initColorPickerUI: function (params) {
 
             var colorWrapper = getDom('div', 'color-wrapper'),
@@ -578,8 +585,9 @@
                     add(colorRow, [colorKey, colorValue]);
 
                     colorPanel.appendChild(colorRow);
+                     this.setPanelStyle(colorPanel, colorbg, colorRow, colorValue)                    
                 }
-
+                
                 this.rgbaDoms[0].value = this.r;
                 this.rgbaDoms[1].value = this.g;
                 this.rgbaDoms[2].value = this.b;
