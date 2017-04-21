@@ -24,7 +24,7 @@ var Content = function (container) {
 
         switch (obj.key) {
             case 'log':
-                wrapper.clear().add(home);
+                wrapper.clear().add(new UI.Span().setText('暂无日志'));
                 break;
             case 'category':
                 wrapper.clear().add(new Category(container));
