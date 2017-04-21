@@ -5,7 +5,7 @@ var Footer = function (container) {
     footer.setClass('footer');
 
     footer.add(
-        new UI.Div().setClass('one').setText('@ 2016 & 04-20'),
+        new UI.Div().setClass('one').setText('@ 2017 & 04-20'),
         new UI.Div().setClass('two').setText('misliu')
     );
 
