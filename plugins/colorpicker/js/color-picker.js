@@ -260,12 +260,20 @@
 
             addEvent(document, 'mousedown', clearWrapper);
 
+            if (params.showRgbProps) {
+                addEvent(this.ui.panel, 'mousedown', cancelEvent);                
+            }            
+
             if (params.dragMove) {
                 this.dragMove(this.ui.title, this.ui.wrapper);
             }
-
             this.wheelDragMove(this.ui.board, this.ui.wheel, params);
             self.selectDragMove(self.ui.bar, self.ui.selector, params);
+        }
+
+        function cancelEvent (e) {
+            e.preventDefault();
+            e.stopPropagation();
         }
 
         function showWrapper() {
