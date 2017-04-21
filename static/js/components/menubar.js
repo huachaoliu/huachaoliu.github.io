@@ -10,7 +10,7 @@ var Menubar = function (container, num) {
 
     var menuStack = [
         { key: "home", value: "首页" },
-        { key: "done", value: "日志" },
+        { key: "record", value: "日志" },
         { key: "category", value: "分类" },
         { key: "help", value: "帮助" },
         { key: "about", value: "关于" }

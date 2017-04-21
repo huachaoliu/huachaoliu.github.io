@@ -281,7 +281,8 @@ h2 {
 }
 
 .wrapper .home,
-.wrapper .category{
+.wrapper .category,
+.wrapper .empty{
     padding: 0 10px 0 70px;
 }
 
