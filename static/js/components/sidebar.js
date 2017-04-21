@@ -34,7 +34,7 @@ var Sidebar = function (store) {
                 log += 1;
             } else if (files[j].type === "tag") {
                 tag += 1;
-            } else {
+            } else if (files[j].type === "category") {
                 category += 1;
             }
         }

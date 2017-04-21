@@ -38,7 +38,7 @@ var Article = function (container, files) {
                     url
                 );
             } else {
-                text = new UI.Div().setClass('text').setText(files.tags[i].text);     
+                text = new UI.Div().setClass('text').setText(files.tags[i].text);
                 // text = new UI.Div().setClass('text').add(new UI.P().setText(files.tags[i].text[j]));                                                                   
             }
         }
