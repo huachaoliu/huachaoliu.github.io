@@ -13,9 +13,14 @@ var Content = function (container) {
             case 'home':
                 wrapper.clear().add(home);
                 break;
+            case 'log':
+                wrapper.clear().add(new UI.Span().setText('暂无日志'));
+                break;
             case 'category':
                 wrapper.clear().add(new Category(container));
                 break;
+            case 'help':
+                wrapper.clear().add(new UI.Span().setText('这里也什么都没有'));
         }
 
     });
