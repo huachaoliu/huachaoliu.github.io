@@ -9,7 +9,7 @@ var HomeFiles = function () {
 
     var homeFile = [
         {
-            type: "log",
+            type: "home",
             title: {
                 h2: "没事整个静态的博客玩玩",
                 time: "发布与 2016-04-20",
