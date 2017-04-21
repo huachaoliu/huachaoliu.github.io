@@ -249,6 +249,34 @@
 
     UI.H2.prototype = Object.create(UI.Element.prototype);
     UI.H2.prototype.constructor = UI.H2;
+
+    UI.Url = function (url) {
+        UI.Element.call(this);
+        var dom = document.createElement('a');
+        dom.href = url;
+        dom.textContent = url;
+        this.dom = dom;
+        return this;
+    };
+
+    UI.Url.prototype = Object.create(UI.Element.prototype);
+
+    UI.Url.prototype.constructor = UI.Url;
+
+    UI.Url.prototype.setTarget = function (target) {
+        this.dom.target = target;
+        return this;
+    };
+
+    UI.P = function () {
+        UI.Element.call(this);
+        this.dom = document.createElement('p');
+        return this; 
+    };
+
+    UI.P.prototype = Object.create(UI.Element.prototype);
+
+    UI.P.prototype.constructor = UI.P;
     
     UI.Input = function (text, type) {
 

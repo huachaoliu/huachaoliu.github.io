@@ -5,8 +5,8 @@ var Footer = function (container) {
     footer.setClass('footer');
 
     footer.add(
-        new UI.Div().setClass('one').setText('@ 2016 & 个人板蓝根'),
-        new UI.Div().setClass('two').setText('学挖掘机技术哪家强?中国山东找南翔')
+        new UI.Div().setClass('one').setText('@ 2016 & 04-20'),
+        new UI.Div().setClass('two').setText('misliu')
     );
 
     return footer;

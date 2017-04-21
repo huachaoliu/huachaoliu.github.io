@@ -21,11 +21,27 @@ var Article = function (container, files) {
 
     var setions = new UI.Div().setClass('label')
 
+    var reg = /http:\/\//ig;
+
     for (var i = 0, l = files.tags.length; i < l; i++) {
 
         var tag = new UI.H2().setText(files.tags[i].name);
 
-        var text = new UI.Div().setClass('text').setText(files.tags[i].text);
+        for (var j = 0; j < files.tags[i].text.length; j++) {
+            var text;
+            var txtValue = files.tags[i].text[j];
+            if (reg.test(txtValue)) {
+                var key = new UI.Span().setText(txtValue.substring(0, txtValue.indexOf('http')));
+                var url = new UI.Url(txtValue.substring(txtValue.indexOf('http'))).setTarget('blank');
+                text = new UI.Div().setClass('text').add(
+                    key,
+                    url
+                );
+            } else {
+                text = new UI.Div().setClass('text').setText(files.tags[i].text);     
+                // text = new UI.Div().setClass('text').add(new UI.P().setText(files.tags[i].text[j]));                                                                   
+            }
+        }
 
         setions.add(tag, text);
 

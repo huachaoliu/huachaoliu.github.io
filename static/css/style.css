@@ -280,15 +280,16 @@ h2 {
     text-align: left;
 }
 
-.wrapper .home{
+.wrapper .home,
+.wrapper .category{
     padding: 0 10px 0 70px;
 }
 
-.wrapper .home .article {
+.wrapper .article {
     margin-bottom: 80px;
 }
 
-.wrapper .home .type span{
+.wrapper .type span{
     display: inline-block;
     padding: 0 10px;
     font-size: 14px;
@@ -298,14 +299,14 @@ h2 {
     border-right: 1px solid #999;
     margin: 10px 0;
 }
-.wrapper .home .type span:first-child{
+.wrapper .type span:first-child{
     padding-left: 0;
 }
-.wrapper .home .type span:last-child{
+.wrapper .type span:last-child{
     border-right: none;
 }
 
-.wrapper .home .label h2{
+.wrapper .label h2{
     font-size: 20px;
     color: #333;
     height: 40px;
@@ -314,13 +315,13 @@ h2 {
     margin-bottom: 16px;
 }
 
-.wrapper .home .label .text{
+.wrapper .label .text{
     font-size: 14px;
     line-height: 40px;
     padding: 10px 0;
 }
 
-.wrapper .home .readall {
+.wrapper .readall {
     border: none;
     outline: none;
     background: #fff;
@@ -329,7 +330,7 @@ h2 {
     cursor: pointer;
 }
 
-.wrapper .home .readall::after{
+.wrapper .readall::after{
     content: "»"
 }
 

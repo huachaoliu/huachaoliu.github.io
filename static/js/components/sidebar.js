@@ -21,22 +21,29 @@ var Sidebar = function (store) {
 
     var homeFiles = new HomeFiles();
 
+    var categoryFiles = new CategoryFiles();
+
     var log = 0, category = 0, tag = 0;
 
-    for (var j = 0, len = homeFiles.length; j < len; j++) {
-        if (homeFiles[j].type === "log") {
-            log += 1;
-        } else if (homeFiles[j].type === "tag") {
-            tag += 1;
-        } else {
-            category += 1;
+    rengeCount(homeFiles);
+    rengeCount(categoryFiles);
+
+    function rengeCount(files) {
+        for (var j = 0, len = files.length; j < len; j++) {
+            if (files[j].type === "log") {
+                log += 1;
+            } else if (files[j].type === "tag") {
+                tag += 1;
+            } else {
+                category += 1;
+            }
         }
     }
 
     var tagStack = [
-        { num: log, value: '日志' },
-        { num: category, value: '分类' },
-        { num: tag, value: '标签' }
+        { num: log, value: '日志', key: 'log' },
+        { num: category, value: '分类', key: 'category' },
+        { num: tag, value: '标签', key: 'tag' }
     ];
 
     for (var i = 0; i < tagStack.length; i++) {
@@ -62,7 +69,7 @@ var Sidebar = function (store) {
         (function (i) {
 
             tagItem.onClick(function () {
-
+     
                 signals.sideTagClicked.dispatch(tagStack[i]);
 
             });

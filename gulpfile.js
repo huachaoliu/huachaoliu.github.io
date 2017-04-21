@@ -35,8 +35,10 @@ gulp.task('minifyjs', function () {
         'static/js/components/content.js',
         'static/js/components/footer.js',
         'static/js/components/pages/home.js',
+        'static/js/components/pages/category.js',
         'static/js/components/pages/article.js',
         'static/js/components/datas/homeFiles.js',
+        'static/js/components/datas/categoryFiles.js',
         'static/js/stores/store.js',
         'static/js/tools/tool.js',
     ];

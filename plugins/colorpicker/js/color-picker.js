@@ -268,7 +268,10 @@
                 this.dragMove(this.ui.title, this.ui.wrapper);
             }
             this.wheelDragMove(this.ui.board, this.ui.wheel, params);
-            self.selectDragMove(self.ui.bar, self.ui.selector, params);
+            this.selectDragMove(self.ui.bar, self.ui.selector, params);
+
+            addEvent(this.ui.panel, 'mousedown', cancelEvent);
+        
         }
 
         function cancelEvent (e) {
@@ -317,6 +320,16 @@
 
                 document.body.removeChild(self.ui.wrapper);
                 self.setPosition(self.ui.wrapper, params);
+
+                if (params.callbackHex !== null) {
+                    var hex = self.rgbToHex(self.r, self.g, self.b);
+                    params.callbackHex(hex);
+                }
+
+                if (params.callbackRgb !== null) {
+                    var rgb = self.r + ',' + self.g + ',' + self.b;
+                    params.callbackHex(rgb);
+                }
             }
         }
 

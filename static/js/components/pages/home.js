@@ -23,23 +23,17 @@ var Home = function (container) {
 
     renderHome();
 
-    signals.menuItemClicked.add(function (obj) {
+    // signals.menuItemClicked.add(function (obj) {
 
-        home.clear();
+    //     home.clear();
 
-        if (obj.key === 'home') {
-            renderHome();
-        } else {
-            home.setText(obj.value);
-        }
+    //     if (obj.key === 'home') {
+    //         renderHome();
+    //     } else {
+    //         // home.setText(obj.value);
+    //     }
 
-    });
-
-    signals.sideTagClicked.add(function (obj) {
-
-        home.clear().setText(obj.value);
-
-    });
+    // });
 
     return home;
 
