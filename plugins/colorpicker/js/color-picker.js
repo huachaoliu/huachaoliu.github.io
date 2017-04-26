@@ -13,7 +13,6 @@
      * @param {target, options} dom and config
      */
     var ColorPicker = function (target, options) {
-
         this.dom = target;
         this.cssPreFix = 'colorpicker-';
 
@@ -24,6 +23,7 @@
             showRgbProps: false,
             showTargetBg: false,
             changeTargetValue: false,
+            showOnlyOne: false,
             position: 'defaults',
             targetBg: '#ffffff',
             initColor: {
@@ -103,7 +103,6 @@
         BG: "bg",
         ROW: "row",
         KEY: "key",
-        // BOX: "box",
         VALUE: "value",
         HEX: "hex"
     };
@@ -218,7 +217,7 @@
 
             colorpicker.bar.style.width = '12px';
             colorpicker.bar.style.height = this.size + 'px';
-            colorpicker.bar.style.backgroundSize = '100% 1500%';
+            colorpicker.bar.style.backgroundSize = '100% 1945px';
 
             colorpicker.selector.style.width = '12px';
         } else {
@@ -258,11 +257,13 @@
 
             addEvent(this.ui.closed, 'click', hideWrapper);
 
-            addEvent(document, 'mousedown', clearWrapper);
+            if (params.showOnlyOne) {
+                addEvent(document, 'mousedown', clearWrapper);
+            }
 
             if (params.showRgbProps) {
-                addEvent(this.ui.panel, 'mousedown', cancelEvent);                
-            }            
+                addEvent(this.ui.panel, 'mousedown', cancelEvent);
+            }
 
             if (params.dragMove) {
                 this.dragMove(this.ui.title, this.ui.wrapper);
@@ -271,15 +272,17 @@
             this.selectDragMove(self.ui.bar, self.ui.selector, params);
 
             addEvent(this.ui.panel, 'mousedown', cancelEvent);
-        
+
         }
 
-        function cancelEvent (e) {
+        function cancelEvent(e) {
             e.preventDefault();
             e.stopPropagation();
         }
 
-        function showWrapper() {
+        function showWrapper(e) {
+            e.preventDefault();
+            self.dom.disabled = 'disabled';
             document.body.appendChild(self.ui.wrapper);
         }
 
@@ -287,7 +290,20 @@
             var hasWrapper = document.getElementById(self.id);
             if (!!hasWrapper) {
                 self.dom.blur();
+                self.dom.disabled = false;
                 document.body.removeChild(self.ui.wrapper);
+
+                // removeEvent(self.dom, 'focus', showWrapper);
+                // removeEvent(self.ui.closed, 'click', hideWrapper);
+
+                // removeEvent(document, 'mousedown', clearWrapper);
+
+                // if (params.showRgbProps) {
+                //     removeEvent(self.ui.panel, 'mousedown', cancelEvent);                
+                // }   
+
+                // removeEvent(self.ui.panel, 'mousedown', cancelEvent);
+
                 self.setPosition(self.ui.wrapper, params);
 
                 if (params.callbackHex !== null) {
@@ -494,7 +510,16 @@
 
     };
 
+    function isMobileTermilar() {
+        var ua = window.navigator.userAgent;
+        if (ua.match(/(Android|iPhone|iPad)/)) {
+            return true;
+        }
+        return false;
+    }
+
     ColorPicker.prototype.setPosition = function (wrapper, params) {
+        var isMobile = isMobileTermilar();
         switch (params.position) {
             case 'r b':
                 break;
@@ -698,7 +723,9 @@
                 }
             }
         } else {
-            dom.addEventListener(type, method, false);
+            if (dom) {
+                dom.addEventListener(type, method, false);
+            }
         }
     }
 
@@ -710,7 +737,9 @@
                 }
             }
         } else {
-            dom.removeEventListener(type, method, false);
+            if (dom) {
+                dom.removeEventListener(type, method, false);
+            }
         }
     }
 
