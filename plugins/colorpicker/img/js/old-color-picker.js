@@ -23,7 +23,6 @@
             showRgbProps: false,
             showTargetBg: false,
             changeTargetValue: false,
-            showOnlyOne: false,
             position: 'defaults',
             targetBg: '#ffffff',
             initColor: {
@@ -33,12 +32,14 @@
                 a: 1
             },
             scale: 1,
+            wheelSize: 16,
             callbackHex: null,
             callbackRgb: null,
             customClassName: null
         };
         var params = colorExtend(defaults, options);
-
+        var isMobile = isMobileTermilar();
+        if (isMobile) params.showRgbProps = false;
         this.bgType = {
             w: '#ffffff',
             b: '#444444',
@@ -52,7 +53,7 @@
         this.hue = 0;
         this.scale = params.scale;
         this.size = 256 / this.scale;
-        this.wheelOffset = 8 / this.scale;
+        this.wheelOffset = params.wheelSize/ 2 / this.scale;
         this.hueOffset = 3;
         this.rgba = 'rgbah';
         this.rgbaDomList = [];
@@ -178,7 +179,11 @@
         this.setPosition(colorPickerWrapper, params);
 
         add(colorPickerBoardParent, [colorPickerBoard, colorPickerMask, colorPickerWheel]);
-        add(colorPickerWrapper, [colorPickerTitle, colorPickerBoardParent, colorPickerBar, colorPickerPanel]);
+        if (params.dragMove) {
+            add(colorPickerWrapper, [colorPickerTitle, colorPickerBoardParent, colorPickerBar, colorPickerPanel]);            
+        } else {
+            add(colorPickerWrapper, [colorPickerBoardParent, colorPickerBar, colorPickerPanel]);            
+        }
 
         var colorPickerDomStack = {
             wrapper: colorPickerWrapper,
@@ -202,9 +207,23 @@
 
     ColorPicker.prototype.setColorPickerStyle = function (colorpicker, params) {
         colorpicker.wrapper.style.background = this.bgType[params.customBg];
-        colorpicker.wrapper.style.height = (45 + this.size - 10) + 'px';
+        var h = 35;
+        if (!params.dragMove) {
+            h = 0;
+        }
+        colorpicker.wrapper.style.height = (h + this.size) + 'px';
         colorpicker.boardParent.style.width = this.size + 'px';
         colorpicker.boardParent.style.height = this.size + 'px';
+
+        colorpicker.wheel.style.width = params.wheelSize + 'px';
+        colorpicker.wheel.style.height = params.wheelSize + 'px';
+        if (!params.showRgbProps) {
+            if (this.scale > 1) {
+                colorpicker.wrapper.style.width = '146px';
+            } else {
+                colorpicker.wrapper.style.width = '282px';               
+            }
+        }
         if (this.scale > 1) {
             colorpicker.title.style.height = '24px';
             colorpicker.title.style.lineHeight = '24px';
@@ -217,7 +236,7 @@
 
             colorpicker.bar.style.width = '12px';
             colorpicker.bar.style.height = this.size + 'px';
-            colorpicker.bar.style.backgroundSize = '100% 1945px';
+            colorpicker.bar.style.backgroundSize = '100% 1944px';
 
             colorpicker.selector.style.width = '12px';
         } else {
@@ -253,13 +272,11 @@
         var hasWrapper = document.getElementById(this.id);
 
         if (!hasWrapper) {
-            addEvent(this.dom, 'focus', showWrapper);
+            addEvent(this.dom, 'click', showWrapper);
 
             addEvent(this.ui.closed, 'click', hideWrapper);
 
-            if (params.showOnlyOne) {
-                addEvent(document, 'mousedown', clearWrapper);
-            }
+            addEvent(document, 'mousedown', clearWrapper);
 
             if (params.showRgbProps) {
                 addEvent(this.ui.panel, 'mousedown', cancelEvent);
@@ -529,6 +546,7 @@
                 break;
             case 'l b':
             default:
+
                 this.left = this.dom.offsetLeft;
                 this.top = this.dom.offsetTop + params.h;
                 wrapper.style.left = (this.left - 1) + 'px';

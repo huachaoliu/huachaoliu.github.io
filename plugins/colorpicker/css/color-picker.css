@@ -93,6 +93,7 @@ body{
     position: absolute;
     cursor: crosshair;        
     z-index: 10002;
+    background-size: contain;
 }
 
 .colorpicker-bar{
@@ -117,11 +118,10 @@ body{
 }
 
 .colorpicker-panel{
-    /*width: 78px;*/
-    width: 95px;
+    width: 82px;
     height: 236px;
     float: left;
-    padding: 10px;
+    padding: 5px;
     margin-left: 5px;
     background: #333;
 }
