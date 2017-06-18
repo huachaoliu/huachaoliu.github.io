@@ -1,0 +1,36 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #f4f7fb;
+}
+
+#log {
+    width: 80%;
+    margin: 50px auto;
+}
+
+.title{
+    position: absolute;
+    left: 20%;
+    font-size: 22px;
+    padding-left: 90px;
+    background: #bae3ed;
+    color:  rgb(1, 161, 213);;
+    font-weight: normal;
+    line-height: 40px;
+    background: url(./time.png) no-repeat;
+    background-size: contain;
+}
+
+.items {
+    min-height: 40px;
+    line-height: 40px;
+    padding-left: 80px;
+}
+
+.strong{
+    font-weight: bold;
+}
