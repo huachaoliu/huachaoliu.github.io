@@ -7,7 +7,7 @@ var express = require('express')
 
 app.use(bodyParser());
 app.use(bodyParser.urlencoded({extended: true}));
-// app.use(serveStatic(path.join(__dirname, '..')));
+app.use(serveStatic(path.join(__dirname, '..')));
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '../index.html'));

@@ -5,24 +5,23 @@
  */
 
 (function () {
-    "use strict";
+    'use strict';
     /**
      * Class constructor for colorpicker plugin.
      * see demo at:http://github.com/misliu/misliu.github.io/plugins/colorpicker
      * @constructor
-     * @param {target, options} dom and config
+     * @param {target, options} dom and config params
      */
-    var ColorPicker = function (target, options) {
 
+    var ColorPicker = function (target, options) {
         this.dom = target;
         this.cssPreFix = 'colorpicker-';
-
         var defaults = {
-            h: 26,
+            domH: 26,
             dragMove: false,
             customBg: 'b',
             showRgbProps: false,
-            showTargetBg: false,
+            showTargetBg: true,
             changeTargetValue: false,
             position: 'defaults',
             targetBg: '#ffffff',
@@ -33,218 +32,55 @@
                 a: 1
             },
             scale: 1,
+            wheelSize: 16,
             callbackHex: null,
             callbackRgb: null,
             customClassName: null
+        },
+            params = extend(defaults, options),
+            isMobile = isMobileDevice(),
+            _events = eventHandle();
+        this.th = 35;
+        this.ow = 0;
+        this.oh = 0;
+        this.wheelTh = this.th + params.wheelSize / 2;
+        if (isMobile) {
+            params.showRgbProps = false
+            params.dragMove = false;
+            this.th = 0;
+            this.wheelTh = this.th + params.wheelSize / 2 * params.scale;
         };
-        var params = colorExtend(defaults, options);
-
         this.bgType = {
             w: '#ffffff',
             b: '#444444',
             g: '#888888'
         };
+        this.isMobile = isMobile;
+        this.events = _events;
         this.id = this.cssPreFix + this.dom.id;
-        this.r = 255;
-        this.g = 255;
-        this.b = 255;
+        this.r = this.g = this.b = 255;
         this.alpha = 1;
         this.hue = 0;
         this.scale = params.scale;
         this.size = 256 / this.scale;
-        this.wheelOffset = 8 / this.scale;
+        this.wheelOffset = params.wheelSize / 2 / this.scale;
         this.hueOffset = 3;
         this.rgba = 'rgbah';
         this.rgbaDomList = [];
-
-        this.x = 0;
-        this.y = 0;
-        this.left = 0;
-        this.top = 0;
-
-        this.ui = this.renderColorPickerUI(params);
-
+        this.x = this.y = this.left = this.top = 0;
+        this.ui = this.renderColorPickerUi(params);
         this.initColorPicker(params);
-    }
-    window["ColorPicker"] = ColorPicker;
+    };
 
     ColorPicker.prototype.constructor = ColorPicker;
 
-    /**
-     * @method to2 {function}
-     */
-
-    // ColorPicker.to2 = to2;
-    // ColorPicker.hex2 = hex2;
-    // ColorPicker.extend = colorExtend;
-    // ColorPicker.getDom = getDom;
-    // ColorPicker.add = add;
-    // ColorPicker.remove = remove;
-    // ColorPicker.addEvent = addEvent;
-    // ColorPicker.removeEvent = removeEvent;
-
-    /**
-     * init colorpioker ui className
-     * @enum {string}
-     * @private
-     */
-
-    ColorPicker.prototype.cssClasses = {
-        WRAPPER: "wrapper",
-        TITLE: "title",
-        CLOSED: "closed",
-        BOARD_PARENT: "board-parent",
-        BOARD: "board",
-        MASK: "mask",
-        WHEEL: "wheel",
-        BAR: "bar",
-        SELECTOR: "selector",
-        PANEL: "panel",
-        BG: "bg",
-        ROW: "row",
-        KEY: "key",
-        // BOX: "box",
-        VALUE: "value",
-        HEX: "hex"
-    };
-
-    ColorPicker.prototype.renderColorPickerUI = function (params) {
-
-        if (params.customClassName) {
-            params.customClassName(this.cssClasses);
-        }
-
-        var colorPickerWrapper = getDom("div", this.cssPreFix + this.cssClasses.WRAPPER),
-            colorPickerTitle = getDom("div", this.cssPreFix + this.cssClasses.TITLE),
-            colorPickerClosed = getDom("span", this.cssPreFix + this.cssClasses.CLOSED),
-            colorPickerBoardParent = getDom("div", this.cssPreFix + this.cssClasses.BOARD_PARENT),
-            colorPickerBoard = getDom("div", this.cssPreFix + this.cssClasses.BOARD),
-            colorPickerMask = getDom("div", this.cssPreFix + this.cssClasses.MASK),
-            colorPickerWheel = getDom("div", this.cssPreFix + this.cssClasses.WHEEL),
-            colorPickerBar = getDom("div", this.cssPreFix + this.cssClasses.BAR),
-            colorPickerSelector = getDom("div", this.cssPreFix + this.cssClasses.SELECTOR),
-            colorPickerPanel = null,
-            r, g, b;
-
-        colorPickerWrapper.id = this.id;
-        colorPickerTitle.textContent = "color picker";
-        colorPickerTitle.appendChild(colorPickerClosed);
-        colorPickerBar.appendChild(colorPickerSelector);
-        r = params.initColor.r;
-        g = params.initColor.g;
-        b = params.initColor.b;
-
-        setStyle(colorPickerMask, 'background', 'rgb(' + r + ',' + g + ',' + b + ')');
-
-        if (params.showRgbProps) {
-
-            colorPickerPanel = getDom('div', this.cssPreFix + this.cssClasses.PANEL);
-
-            var colorPickerBg = getDom('div', this.cssPreFix + this.cssClasses.BG);
-            var rgba = 'rgba(' + this.r + ',' + this.g + ',' + this.b + ',' + this.alpha + ')';
-            setStyle(colorPickerBg, 'background', rgba);
-            colorPickerPanel.appendChild(colorPickerBg);
-
-            for (var i = 0; i < this.rgba.length; i++) {
-                var colorPickerRow = getDom('div', this.cssPreFix + this.cssClasses.ROW),
-                    colorPickerKey = getDom('span', this.cssPreFix + this.cssClasses.KEY),
-                    colorPickerValue = getDom('input', this.cssPreFix + this.cssClasses.VALUE);
-
-                colorPickerKey.textContent = this.rgba[i] + ':';
-                colorPickerValue.className += ' ' + this.rgba[i] + this.cssClasses.HEX;
-                colorPickerValue.type = 'text';
-
-                if (this.rgba[i] === 'a') {
-                    colorPickerValue.maxLength = 3;
-                }
-
-                this.rgbaDomList.push(colorPickerValue);
-                add(colorPickerRow, [colorPickerKey, colorPickerValue]);
-                colorPickerPanel.appendChild(colorPickerRow);
-                this.setRgbaPanelStyle(colorPickerPanel, colorPickerBg, colorPickerRow, colorPickerValue);
-            }
-
-            this.rgbaDomList[0].value = this.r;
-            this.rgbaDomList[1].value = this.g;
-            this.rgbaDomList[2].value = this.b;
-            this.rgbaDomList[3].value = this.alpha;
-            this.rgbaDomList[4].value = this.rgbToHex(this.r, this.g, this.b);
-
-            this.rgbaDomList[0].style.backgroundPositionX = - (255 - this.r) / 5 + 'px';
-            this.rgbaDomList[1].style.backgroundPositionX = - (255 - this.g) / 5 + 'px';
-            this.rgbaDomList[2].style.backgroundPositionX = - (255 - this.b) / 5 + 'px';
-            this.rgbaDomList[3].style.backgroundPositionX = - (1 - this.alpha) * 51 + 'px';
-        }
-
-        this.setPosition(colorPickerWrapper, params);
-
-        add(colorPickerBoardParent, [colorPickerBoard, colorPickerMask, colorPickerWheel]);
-        add(colorPickerWrapper, [colorPickerTitle, colorPickerBoardParent, colorPickerBar, colorPickerPanel]);
-
-        var colorPickerDomStack = {
-            wrapper: colorPickerWrapper,
-            title: colorPickerTitle,
-            closed: colorPickerClosed,
-            boardParent: colorPickerBoardParent,
-            board: colorPickerBoard,
-            mask: colorPickerMask,
-            wheel: colorPickerWheel,
-            bar: colorPickerBar,
-            bg: colorPickerBg,
-            selector: colorPickerSelector,
-            panel: colorPickerPanel,
-            row: colorPickerRow,
-            key: colorPickerKey,
-            value: colorPickerValue
-        };
-        this.setColorPickerStyle(colorPickerDomStack, params);
-        return colorPickerDomStack;
-    };
-
-    ColorPicker.prototype.setColorPickerStyle = function (colorpicker, params) {
-        colorpicker.wrapper.style.background = this.bgType[params.customBg];
-        colorpicker.wrapper.style.height = (45 + this.size - 10) + 'px';
-        colorpicker.boardParent.style.width = this.size + 'px';
-        colorpicker.boardParent.style.height = this.size + 'px';
-        if (this.scale > 1) {
-            colorpicker.title.style.height = '24px';
-            colorpicker.title.style.lineHeight = '24px';
-            colorpicker.title.style.textIndent = '7px';
-
-            colorpicker.closed.style.margin = '2px 5px 0 0';
-
-            colorpicker.wheel.style.left = - this.wheelOffset * 2 + 'px';
-            colorpicker.wheel.style.top = - this.wheelOffset * 2 + 'px';
-
-            colorpicker.bar.style.width = '12px';
-            colorpicker.bar.style.height = this.size + 'px';
-            colorpicker.bar.style.backgroundSize = '100% 1500%';
-
-            colorpicker.selector.style.width = '12px';
-        } else {
-            colorpicker.wheel.style.left = - this.wheelOffset + 'px';
-            colorpicker.wheel.style.top = - this.wheelOffset + 'px';
-        }
-    };
-
-    ColorPicker.prototype.setRgbaPanelStyle = function (panel, bg, row, value) {
-        if (this.scale > 1) {
-            panel.style.height = '108px';
-            bg.style.height = '12px';
-            row.style.height = '18px';
-            row.style.lineHeight = '18px';
-            value.style.fontSize = '12px';
-            value.style.lineHeight = '16px';
-        }
-    };
-
+    window['ColorPicker'] = ColorPicker;
 
     ColorPicker.prototype.initColorPicker = function (params) {
         var self = this;
         if (params.showTargetBg) {
-            setStyle(this.dom, 'background', params.targetBg);
+            setStyle(this.dom, { background: params.targetBg });
         }
-
         if (params.changeTargetValue) {
             var color = this.rgbToHex(this.r, this.g, this.b);
             this.dom.value = color;
@@ -254,15 +90,15 @@
         var hasWrapper = document.getElementById(this.id);
 
         if (!hasWrapper) {
-            addEvent(this.dom, 'focus', showWrapper);
+            addEvent(this.dom, 'click', showWrapper);
 
             addEvent(this.ui.closed, 'click', hideWrapper);
 
-            addEvent(document, 'mousedown', clearWrapper);
+            addEvent(document, this.events.mouseDown, clearWrapper);
 
             if (params.showRgbProps) {
-                addEvent(this.ui.panel, 'mousedown', cancelEvent);                
-            }            
+                addEvent(this.ui.panel, this.events.mouseDown, cancelEvent);
+            }
 
             if (params.dragMove) {
                 this.dragMove(this.ui.title, this.ui.wrapper);
@@ -270,16 +106,18 @@
             this.wheelDragMove(this.ui.board, this.ui.wheel, params);
             this.selectDragMove(self.ui.bar, self.ui.selector, params);
 
-            addEvent(this.ui.panel, 'mousedown', cancelEvent);
-        
+            addEvent(this.ui.panel, this.events.mouseDown, cancelEvent);
+
         }
 
-        function cancelEvent (e) {
+        function cancelEvent(e) {
             e.preventDefault();
             e.stopPropagation();
         }
 
-        function showWrapper() {
+        function showWrapper(e) {
+            e.preventDefault();
+            self.dom.disabled = 'disabled';
             document.body.appendChild(self.ui.wrapper);
         }
 
@@ -287,6 +125,7 @@
             var hasWrapper = document.getElementById(self.id);
             if (!!hasWrapper) {
                 self.dom.blur();
+                self.dom.disabled = false;
                 document.body.removeChild(self.ui.wrapper);
                 self.setPosition(self.ui.wrapper, params);
 
@@ -332,23 +171,23 @@
                 }
             }
         }
-
     };
 
     ColorPicker.prototype.dragMove = function (clickTarget, moveTarget) {
-        var self = this;
-        addEvent(clickTarget, 'mousedown', onMouseDown);
+        var self = this,
+            _events = this.events;
+        addEvent(clickTarget, _events.mouseDown, onMouseDown);
         function onMouseDown(e) {
             e.preventDefault();
-            var disX = e.pageX - self.left,
-                disY = e.pageY - self.top;
-            addEvent(document, 'mousemove', onMouseMove);
-            addEvent(document, 'mouseup', onMouseUp);
+            var disX = getXY(e).x - self.left,
+                disY = getXY(e).y - self.top;
+            addEvent(document, _events.mouseMove, onMouseMove);
+            addEvent(document, _events.mouseUp, onMouseUp);
 
             function onMouseMove(e) {
                 e.preventDefault();
-                var left = e.pageX - disX;
-                var top = e.pageY - disY;
+                var left = getXY(e).x - disX;
+                var top = getXY(e).y - disY;
                 var maxL = document.documentElement.clientWidth - moveTarget.clientWidth - 2;
                 var maxT = document.documentElement.clientHeight - moveTarget.clientHeight - 2;
 
@@ -367,7 +206,6 @@
 
                 self.left = left;
                 self.top = top;
-
                 moveTarget.style.left = left + 'px';
                 moveTarget.style.top = top + 'px';
 
@@ -375,23 +213,25 @@
             }
 
             function onMouseUp() {
-                removeEvent(document, 'mousemove', onMouseMove);
-                removeEvent(document, 'mouseup', onMouseUp);
+                removeEvent(document, _events.mouseMove, onMouseMove);
+                removeEvent(document, _events.mouseUp, onMouseUp);
             }
 
         }
     };
 
     ColorPicker.prototype.wheelDragMove = function (clickTarget, moveTarget, params) {
-        var self = this;
-        addEvent(clickTarget, 'mousedown', onMouseDown);
-        addEvent(moveTarget, 'mousedown', onMouseDown);
+        var self = this,
+            _events = this.events,
+            isMobile = isMobileDevice();
+        addEvent(clickTarget, _events.mouseDown, onMouseDown);
+        addEvent(moveTarget, _events.mouseDown, onMouseDown);
 
         function onMouseDown(e) {
             e.preventDefault();
-            var disX = e.pageX - self.left - 6 - self.wheelOffset;
+            var disX = getXY(e).x - self.left + self.ow - 6 - self.wheelOffset;
 
-            var disY = e.pageY - self.top - 43 - self.wheelOffset;
+            var disY = getXY(e).y - self.top + self.oh - self.wheelTh - self.wheelOffset;
             disX = self.scale > 1 ? disX - self.scale * 2 : disX;
             disY = self.scale > 1 ? disY - self.scale * 2 + 6 : disY;
             self.x = disX;
@@ -402,13 +242,13 @@
 
             self.update(disX, disY, params);
 
-            addEvent(document, 'mousemove', onMouseMove);
-            addEvent(document, 'mouseup', onMouseUp);
+            addEvent(document, _events.mouseMove, onMouseMove);
+            addEvent(document, _events.mouseUp, onMouseUp);
 
             function onMouseMove(e) {
                 e.preventDefault();
-                disX = e.pageX - self.left - 6 - self.wheelOffset;
-                disY = e.pageY - self.top - 43 - self.wheelOffset;
+                disX = getXY(e).x - self.left + self.ow - 6 - self.wheelOffset;
+                disY = getXY(e).y - self.top + self.oh - self.wheelTh - self.wheelOffset;
                 if (disX < - self.wheelOffset) {
                     disX = - self.wheelOffset
                 } else if (disX > self.size - self.wheelOffset) {
@@ -431,16 +271,18 @@
             }
 
             function onMouseUp() {
-                removeEvent(document, 'mousemove', onMouseMove);
-                removeEvent(document, 'mouseup', onMouseUp);
+                removeEvent(document, _events.mouseMove, onMouseMove);
+                removeEvent(document, _events.mouseUp, onMouseUp);
             }
 
         }
     };
 
     ColorPicker.prototype.selectDragMove = function (clickTarget, moveTarget, params) {
-        var self = this;
-        addEvent(clickTarget, 'mousedown', onMouseDown);
+        var self = this,
+            _events = this.events,
+            isMobile = isMobileDevice();
+        addEvent(clickTarget, _events.mouseDown, onMouseDown);
 
         function onMouseDown(e) {
             e.preventDefault();
@@ -450,7 +292,7 @@
             var disX = self.ui.wheel.offsetLeft + self.wheelSize;
             var disY = self.ui.wheel.offsetTop + self.wheelSize;
 
-            var y = e.pageY - t - self.hueOffset;
+            var y = getXY(e).y - t - self.hueOffset;
             var h = 360 / (256 / self.scale);
             self.hue = 360 - Math.round((y + self.hueOffset) * h);
             self.sethue(disX, disY, y, scope, params);
@@ -458,15 +300,15 @@
             self.update(self.x, self.y, params);
             moveTarget.style.top = y + 'px';
 
-            document.addEventListener('mousemove', onMouseMove, false);
-            document.addEventListener('mouseup', onMouseUp, false);
+            document.addEventListener(_events.mouseMove, onMouseMove, false);
+            document.addEventListener(_events.mouseUp, onMouseUp, false);
 
             function onMouseMove(e) {
                 e.preventDefault();
                 disX = self.ui.wheel.offsetLeft + self.wheelSize;
                 disY = self.ui.wheel.offsetTop + self.wheelSize;
 
-                y = e.pageY - t - self.hueOffset;
+                y = getXY(e).y - t - self.hueOffset;
 
                 if (y < - self.hueOffset) {
                     y = - self.hueOffset;
@@ -484,40 +326,13 @@
             }
 
             function onMouseUp() {
-
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
+                document.removeEventListener(_events.mouseMove, onMouseMove);
+                document.removeEventListener(_events.mouseUp, onMouseUp);
 
             }
 
         }
 
-    };
-
-    ColorPicker.prototype.setPosition = function (wrapper, params) {
-        switch (params.position) {
-            case 'r b':
-                break;
-            case 'l t':
-                break;
-            case 'r t':
-                break;
-            case 'l b':
-            default:
-                this.left = this.dom.offsetLeft;
-                this.top = this.dom.offsetTop + params.h;
-                wrapper.style.left = (this.left - 1) + 'px';
-                wrapper.style.top = this.top + 'px';
-                break;
-        }
-    };
-
-    ColorPicker.prototype.rgbToHex = function (r, g, b) {
-        return '#' + hex2(r) + hex2(g) + hex2(b);
-    };
-
-    ColorPicker.prototype.limitValue = function (value, max, min) {
-        return (value > max ? max : value < min ? min : value);
     };
 
     ColorPicker.prototype.sethue = function (x, y, t, scope, params) {
@@ -566,6 +381,12 @@
             this.b = 0;
         }
         var rgb = this.r + ',' + this.g + ',' + this.b;
+        if (this.isMobile) {
+            this.r = Math.round(this.r);
+            this.g = Math.round(this.g);
+            this.b = Math.round(this.b);
+            rgb = this.r + ',' + this.g + ',' + this.b;
+        }
         this.ui.mask.style.background = 'rgb(' + rgb + ')';
         this.update(this.x, this.y, params);
     };
@@ -641,30 +462,223 @@
         };
     };
 
-    function setStyle(obj, type, attr) {
-        obj.style[type] = attr;
-    }
+    ColorPicker.prototype.limitValue = function (value, max, min) {
+        return (value > max ? max : value < min ? min : value);
+    };
 
-    function to2(n) {
-        /**
-         * 转化的数字必须是整型
-         */
-        n = n | 0;
-        return n > 9 ? '0' + 9 : n;
-    }
+    ColorPicker.prototype.cssClasses = {
+        WRAPPER: "wrapper",
+        TITLE: "title",
+        CLOSED: "closed",
+        BOARD_PARENT: "board-parent",
+        BOARD: "board",
+        MASK: "mask",
+        WHEEL: "wheel",
+        BAR: "bar",
+        SELECTOR: "selector",
+        PANEL: "panel",
+        BG: "bg",
+        ROW: "row",
+        KEY: "key",
+        VALUE: "value",
+        HEX: "hex"
+    };
 
-    function hex2(hex) {
-        return (hex < 16 ? '0' : '') + hex.toString(16);
-    }
+    //build colorpicker ui
+    ColorPicker.prototype.renderColorPickerUi = function (params) {
+        if (params.customClassName) {
+            params.customClassName(this.cssClasses);
+        }
+        var colorPickerWrapper = getDom("div", this.cssPreFix + this.cssClasses.WRAPPER),
+            colorPickerTitle = getDom("div", this.cssPreFix + this.cssClasses.TITLE),
+            colorPickerClosed = getDom("span", this.cssPreFix + this.cssClasses.CLOSED),
+            colorPickerBoardParent = getDom("div", this.cssPreFix + this.cssClasses.BOARD_PARENT),
+            colorPickerBoard = getDom("div", this.cssPreFix + this.cssClasses.BOARD),
+            colorPickerMask = getDom("div", this.cssPreFix + this.cssClasses.MASK),
+            colorPickerWheel = getDom("div", this.cssPreFix + this.cssClasses.WHEEL),
+            colorPickerBar = getDom("div", this.cssPreFix + this.cssClasses.BAR),
+            colorPickerSelector = getDom("div", this.cssPreFix + this.cssClasses.SELECTOR),
+            colorPickerPanel = null,
+            r, g, b;
 
-    function colorExtend(target, options) {
-        for (var prop in target) {
-            if (options.hasOwnProperty(prop)) {
-                target[prop] = options[prop];
+        colorPickerWrapper.id = this.id;
+        colorPickerTitle.textContent = "color picker";
+        colorPickerTitle.appendChild(colorPickerClosed);
+        colorPickerBar.appendChild(colorPickerSelector);
+        r = params.initColor.r;
+        g = params.initColor.g;
+        b = params.initColor.b;
+        setStyle(colorPickerMask, {
+            background: 'rgb(' + r + ',' + g + ',' + b + ')'
+        });
+        if (params.showRgbProps) {
+
+            colorPickerPanel = getDom('div', this.cssPreFix + this.cssClasses.PANEL);
+            var colorPickerBg = getDom('div', this.cssPreFix + this.cssClasses.BG);
+            var rgba = 'rgba(' + this.r + ',' + this.g + ',' + this.b + ',' + this.alpha + ')';
+            setStyle(colorPickerBg, {
+                background: rgba
+            });
+            colorPickerPanel.appendChild(colorPickerBg);
+            for (var i = 0; i < this.rgba.length; i++) {
+                var colorPickerRow = getDom('div', this.cssPreFix + this.cssClasses.ROW),
+                    colorPickerKey = getDom('span', this.cssPreFix + this.cssClasses.KEY),
+                    colorPickerValue = getDom('input', this.cssPreFix + this.cssClasses.VALUE);
+
+                colorPickerKey.textContent = this.rgba[i] + ':';
+                colorPickerValue.className += ' ' + this.rgba[i] + this.cssClasses.HEX;
+                colorPickerValue.type = 'text';
+
+                if (this.rgba[i] === 'a') {
+                    colorPickerValue.maxLength = 3;
+                }
+
+                this.rgbaDomList.push(colorPickerValue);
+                add(colorPickerRow, [colorPickerKey, colorPickerValue]);
+                colorPickerPanel.appendChild(colorPickerRow);
+                this.setRgbaPanelStyle(colorPickerPanel, colorPickerBg, colorPickerRow, colorPickerValue);
+            }
+
+            this.rgbaDomList[0].value = this.r;
+            this.rgbaDomList[1].value = this.g;
+            this.rgbaDomList[2].value = this.b;
+            this.rgbaDomList[3].value = this.alpha;
+            this.rgbaDomList[4].value = this.rgbToHex(this.r, this.g, this.b);
+
+            this.rgbaDomList[0].style.backgroundPositionX = - (255 - this.r) / 5 + 'px';
+            this.rgbaDomList[1].style.backgroundPositionX = - (255 - this.g) / 5 + 'px';
+            this.rgbaDomList[2].style.backgroundPositionX = - (255 - this.b) / 5 + 'px';
+            this.rgbaDomList[3].style.backgroundPositionX = - (1 - this.alpha) * 51 + 'px';
+        }
+
+        this.setPosition(colorPickerWrapper, params);
+        add(colorPickerBoardParent, [
+            colorPickerBoard,
+            colorPickerMask,
+            colorPickerWheel
+        ]);
+
+        add(colorPickerWrapper, [
+            params.dragMove ? colorPickerTitle : null,
+            colorPickerBoardParent,
+            colorPickerBar,
+            colorPickerPanel
+        ]);
+
+        var colorPickerDomStack = {
+            wrapper: colorPickerWrapper,
+            title: colorPickerTitle,
+            closed: colorPickerClosed,
+            boardParent: colorPickerBoardParent,
+            board: colorPickerBoard,
+            mask: colorPickerMask,
+            wheel: colorPickerWheel,
+            bar: colorPickerBar,
+            bg: colorPickerBg,
+            selector: colorPickerSelector,
+            panel: colorPickerPanel,
+            row: colorPickerRow,
+            key: colorPickerKey,
+            value: colorPickerValue
+        };
+        this.setColorPickerStyle(colorPickerDomStack, params);
+        return colorPickerDomStack;
+    };
+
+    ColorPicker.prototype.setColorPickerStyle = function (colorpicker, params) {
+        colorpicker.wrapper.style.background = this.bgType[params.customBg];
+        setStyle(colorpicker.wrapper, {
+            height: (this.th + this.size) + 'px'
+        });
+        setStyle(colorpicker.boardParent, {
+            width: this.size + 'px',
+            height: this.size + 'px'
+        });
+        setStyle(colorpicker.wheel, {
+            width: params.wheelSize + 'px',
+            height: params.wheelSize + 'px'
+        });
+        if (!params.showRgbProps) {
+            if (this.scale > 1) {
+                colorpicker.wrapper.style.width = '146px';
+            } else {
+                colorpicker.wrapper.style.width = '282px';
             }
         }
-        return target;
-    }
+        if (this.scale > 1) {
+            setStyle(colorpicker.title, {
+                height: '24px',
+                lineHeight: '24px',
+                textIndent: '7px'
+            });
+
+            colorpicker.closed.style.margin = '2px 5px 0 0';
+            setStyle(colorpicker.wheel, {
+                left: - this.wheelOffset * 2 + 'px',
+                top: - this.wheelOffset * 2 + 'px',
+            });
+            setStyle(colorpicker.bar, {
+                width: '12px',
+                height: this.size + 'px',
+                backgroundSize: '100% 1944px'
+            });
+
+            colorpicker.selector.style.width = '12px';
+        } else {
+            setStyle(colorpicker.wheel, {
+                left: - this.wheelOffset + 'px',
+                top: - this.wheelOffset + 'px',
+            });
+        }
+    };
+
+    ColorPicker.prototype.setRgbaPanelStyle = function (panel, bg, row, value) {
+        if (this.scale > 1) {
+            panel.style.height = '118px';
+            bg.style.height = '12px';
+            row.style.height = '18px';
+            row.style.lineHeight = '18px';
+            value.style.fontSize = '12px';
+            value.style.lineHeight = '16px';
+        }
+    };
+
+    ColorPicker.prototype.rgbToHex = function (r, g, b) {
+        return '#' + hex2(r) + hex2(g) + hex2(b);
+    };
+
+    ColorPicker.prototype.setPosition = function (wrapper, params) {
+        var isMobile = isMobileDevice();
+        if (isMobile) {
+            this.ow = 190 / this.scale;
+            this.left = this.dom.offsetLeft;
+            this.top = this.dom.offsetTop + params.domH;
+            wrapper.style.left = (this.left - this.ow - 1) + 'px';
+            wrapper.style.top = this.top + 'px';
+        } else {
+            switch (params.position) {
+                case 'r b':
+                    this.ow = 148 / this.scale;
+                    this.left = this.dom.offsetLeft;
+                    this.top = this.dom.offsetTop + params.domH;
+                    wrapper.style.left = (this.left - this.ow - 1) + 'px';
+                    wrapper.style.top = this.top + 'px';
+                    break;
+                case 'l t':
+                    break;
+                case 'r t':
+                    break;
+                case 'l b':
+                default:
+                    this.left = this.dom.offsetLeft;
+                    this.top = this.dom.offsetTop + params.domH;
+                    wrapper.style.left = (this.left - 1) + 'px';
+                    wrapper.style.top = this.top + 'px';
+                    break;
+            }
+        }
+
+    };
 
     function getDom(dom, className) {
         var domEle = document.createElement(dom);
@@ -672,46 +686,105 @@
         return domEle;
     }
 
-    function add(parent, doms) {
-        var i = 0, l = doms.length;
+    function setStyle(obj, json) {
+        for (var key in json) {
+            obj.style[key] = json[key];
+        }
+    }
+
+    function to2(num) {
+        //当我不知道传入参数为整数时处理一下.
+        num = num | 0;
+        return num > 9 ? num : '0' + num;
+    }
+
+    //hex 单数转换双数
+    function hex2(hex) {
+        return (hex < 16 ? '0' : '') + hex.toString(16);
+    }
+
+    function add(parent, childs) {
+        var i = 0, l = childs.length;
         for (; i < l; i++) {
-            if (doms[i]) {
-                parent.appendChild(doms[i]);
+            if (childs[i]) {
+                parent.appendChild(childs[i]);
             }
         }
     }
 
-    function remove(parent, doms) {
-        var i = 0, l = doms.length;
+    function remove(parent, childs) {
+        var i = 0, l = childs.length;
         for (; i < l; i++) {
-            if (doms[i]) {
-                parent.removeChild(doms[i]);
+            if (childs[i]) {
+                parent.removeChild(childs[i]);
             }
         }
     }
 
-    function addEvent(dom, type, method) {
-        if (Array.isArray(dom)) {
-            for (var i = 0, l = dom.length; i < l; i++) {
-                if (dom[i]) {
-                    dom[i].addEventListener(type, method, false);
-                }
+    function clear(parent) {
+        while (parent.children.length) {
+            parent.removeChild(parent.lastChild);
+        }
+        parent.textContent = '';
+    }
+
+    function addEvent(dom, event, method) {
+        dom && dom.addEventListener(event, method, false);
+    }
+
+    function removeEvent(dom, event, method) {
+        dom && dom.removeEventListener(event, method, false);
+    }
+
+    function extend(target, options) {
+        for (var key in target) {
+            if (options.hasOwnProperty(key)) {
+                target[key] = options[key];
             }
+        }
+        return target;
+    }
+
+    function isMobileDevice() {
+        var ua = window.navigator.userAgent;
+        if (ua.match(/(Android|iPhone|iPad)/)) {
+            return true;
+        }
+        return false;
+    }
+
+    function getXY(e) {
+        var isMobile = isMobileDevice(),
+            x, y;
+        if (isMobile) {
+            x = e.changedTouches[0].clientX;
+            y = e.changedTouches[0].clientY;
         } else {
-            dom.addEventListener(type, method, false);
+            x = e.pageX || e.offsetX;
+            y = e.pageY || e.offsetY;
         }
+        return {
+            x: x,
+            y: y
+        };
     }
 
-    function removeEvent(dom, type, method) {
-        if (Array.isArray(dom)) {
-            for (var i = 0, l = dom.length; i < l; i++) {
-                if (dom[i]) {
-                    dom[i].removeEventListener(type, method, false);
-                }
-            }
+    function eventHandle() {
+        var mouseDown, mouseMove, mouseUp,
+            isMobile = isMobileDevice();
+        if (isMobile) {
+            mouseDown = 'touchstart';
+            mouseMove = 'touchmove';
+            mouseUp = 'touchend';
         } else {
-            dom.removeEventListener(type, method, false);
+            mouseDown = 'mousedown';
+            mouseMove = 'mousemove';
+            mouseUp = 'mouseup';
         }
+        return {
+            mouseDown: mouseDown,
+            mouseMove: mouseMove,
+            mouseUp: mouseUp
+        };
     }
-
 })();

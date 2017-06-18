@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
     <title>color-picker</title>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
@@ -17,35 +18,36 @@
 
     <div class="container">
 
-        <input type="text" id="color-picker" class="color-picker" color-root="input">        
-        <input type="text" id="color-pickergb" class="color-picker" color-root="input">        
-        <input type="text" id="color-pickerscale" class="color-picker" color-root="input">        
-
+        <!--<input type="text" id="color-picker" class="color-picker" color-root="input">-->
+        <div id="color-picker" class="color-picker"></div>
+        <div id="color-showrgb" class="color-picker"></div>
+        <div id="color-scale" class="color-picker"></div>
     </div>
     <script>
         new ColorPicker(document.getElementById('color-picker'), {
             dragMove: true,
             showRgbProps: false,
             showTargetBg: true,
-            custombg: 'w'
-        });
-
-        new ColorPicker(document.getElementById('color-pickergb'), {
-            dragMove: true,
-            showRgbProps: true,
-            targetbg: '#000',
-            showTargetBg: true,
-            position: 'l b',
-            custombg: 'g'
-        });
-        new ColorPicker(document.getElementById('color-pickerscale'), {
-            dragMove: true,
-            showRgbProps: true,
-            targetbg: '#000',
-            showTargetBg: true,
-            position: 'l b',
-            custombg: 'b',
+            customBg: 'w',
+            wheelSize: 10,
+            position: 'r b',
             scale: 2
+        });
+        new ColorPicker(document.getElementById('color-showrgb'), {
+            dragMove: true,
+            showRgbProps: true,
+            showTargetBg: true,
+            customBg: 'w',
+            position: 'r b',
+            wheelSize: 10,
+        });
+        new ColorPicker(document.getElementById('color-scale'), {
+            dragMove: true,
+            showRgbProps: true,
+            showTargetBg: true,
+            customBg: 'w',
+            scale: 2,
+            wheelSize: 10            
         });
     </script>
 </body>

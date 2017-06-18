@@ -4,6 +4,7 @@ body{
     -moz-user-select: none;
     user-select: none;
     background: url(../img/bg.png);
+    font: normal normal normal 1em/1.35em;
 }
 .navbar{
     padding: 0 20px;
