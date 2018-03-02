@@ -1,0 +1,44 @@
+.sider {
+  width: 240px;
+  height: 100vh;
+  background: #031629;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all .2s;
+}
+
+// .siderCollapsed {
+//   width: 80px !important;
+//   animation: toSmal .5s;
+
+//   @keyframes toSmal {
+//     from {
+//       width: 320px;
+//     } to {
+//       width: 80px;
+//     }
+//   }
+// }
+
+.sideContent {
+  padding: 24px;
+  color: #fff;
+  text-align: center;
+}
+
+.collapsed {
+  width: 100%;
+  height: 52px;
+  text-align: center;
+  background: #062140;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+
+  i {
+    color: #fff;
+    font-size: 24px;
+    align-self: center;
+  }
+}
