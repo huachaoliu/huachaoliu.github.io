@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>简易贪吃蛇</title>
+</head>
+
+<body>
+    <div id="pannel"></div>
+    <link rel="stylesheet" href="./css/snake.css">
+    <script src="js/grid.js"></script>
+    <script src="js/snake.js"></script>
+    <script>
+        var count = 0;
+        var snake = new Snake(document.getElementById("pannel"), {speed:200, size: 50, color: "single"})
+        Snake.on(document.body, "keydown", function (e) {
+            if (e.keyCode === 32) {
+                if (++count % 2 !== 0) {
+                    snake.start();
+                } else {
+                    snake.stop();
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

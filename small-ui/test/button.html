@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>测试按钮组件</title>
+  <link rel="stylesheet" href="../UI/Button/index.css">
+  <link rel="stylesheet" href="./test.css">
+  <script src="../UI/Button/index.js"></script>
+  <script src="../UI/index.js"></script>
+</head>
+
+<body>
+  <div class="btns"></div>
+  <script>
+    var btns = UI.qs('.btns');
+    var defaultBtn = new UI.Button();
+    var primaryBtn = new UI.Button({}, 'primary', '确定');
+    var dashedBtn = new UI.Button({}, 'dashed', '取消');
+    var dangerBtn = new UI.Button({}, 'danger', '危险');
+    var disabledBtn = new UI.Button({}, 'disabled', '禁用');
+    btns.appendChild(defaultBtn);
+    btns.appendChild(primaryBtn);
+    btns.appendChild(dashedBtn);
+    btns.appendChild(dangerBtn);
+    btns.appendChild(disabledBtn);
+
+    var btnGroup = new UI.ButtonGroup({}, 'dashed');
+    var btnGroup2 = new UI.ButtonGroup({
+      props: [
+        {
+          txt: 'L',
+          styles: {
+            width: 100
+          },
+          events: [
+            {
+              type: 'click',
+              handler: function () {
+                console.log("选择点击的是L");
+              }
+            }
+          ]
+        },
+        { txt: 'M' },
+        { txt: 'R' }
+      ]
+    }, 'dashed');
+    var btnGroup3 = new UI.ButtonGroup({
+      props: [
+        { txt: 'L' },
+        {
+          txt: 'M', styles: {
+            width: 100
+          },
+          events: [
+            {
+              type: 'click',
+              handler: function () {
+                console.log("选择点击的是M");
+              }
+            }
+          ]
+        },
+        { txt: 'R' }
+      ]
+    }, 'primary');
+
+    var btnGroup4 = new UI.ButtonGroup({
+      props: [
+        { txt: 'L' },
+        { txt: 'M' },
+        {
+          txt: 'R', styles: {
+            width: 100
+          },
+          events: [
+            {
+              type: 'click',
+              handler: function () {
+                console.log("选择点击的是R");
+              }
+            }
+          ]
+        }
+      ]
+    }, 'danger');
+
+    var btnGroup5 = new UI.ButtonGroup({
+      props: [
+        { txt: 'L' },
+        {
+          txt: 'M', styles: {
+            width: 100
+          },
+          events: [
+            {
+              type: 'click',
+              handler: function () {
+                console.log("选择点击的是M");
+              }
+            }
+          ]
+        },
+        { txt: 'R' }, 
+        { txt: 'G' }
+      ]
+    }, 'primary');
+
+    btns.appendChild(btnGroup);
+    btns.appendChild(btnGroup2);
+    btns.appendChild(btnGroup3);
+    btns.appendChild(btnGroup4);
+    btns.appendChild(btnGroup5);
+  </script>
+</body>
+
+</html>

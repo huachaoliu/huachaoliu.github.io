@@ -1,0 +1,11 @@
+.btns button {
+  margin: 0 10px;
+}
+
+.btns .ui-btn-group {
+  margin: 10px;
+}
+
+/*.btns .ui-btn-group button{
+  margin: auto;
+}*/

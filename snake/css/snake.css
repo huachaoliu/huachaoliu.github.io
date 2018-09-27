@@ -1,0 +1,42 @@
+html *{
+    margin: 0;
+    padding: 0;
+}
+
+#pannel {
+    background: #000;
+    width: 100%;
+    height: 100vh;
+}
+
+.grid {
+    margin: 0 auto;
+    border: 1px solid #fff; 
+    position: relative;    
+	overflow: hidden;
+}
+
+.message {
+    width: 100%;
+    height: 100%;
+	position: absolute;
+	z-index: 1;
+	font-size: 200px;
+	text-align: center;
+	color: #fff;
+	line-height: 100vh;
+}
+
+.box { 
+    box-sizing: border-box;
+    border: 1px solid #000;
+    position: absolute;
+    background: #fff;
+	border-radius: 5px;
+}
+
+.food {
+    position: absolute;
+    background: #f00;
+	border-radius: 5px;
+}

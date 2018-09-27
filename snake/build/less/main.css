@@ -1,0 +1,147 @@
+html * {
+  margin: 0;
+  padding: 0;
+}
+html {
+  background: #787878;
+}
+h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.game_config {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: transparent;
+}
+.c_mask {
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 3, 8, 0.9);
+  position: absolute;
+  z-index: 1000;
+}
+.c_board {
+  position: absolute;
+  z-index: 1001;
+  width: 400px;
+  height: 220px;
+  left: calc(50% - 208px);
+  top: 20%;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  padding: 16px;
+  box-shadow: 2px 5px 20px #010910;
+}
+.c_board p {
+  font-size: 14px;
+}
+.c_cinfigs {
+  margin-top: 15px;
+  height: 100px;
+}
+.row {
+  display: flex;
+  height: 30px;
+  line-height: 30px;
+  margin-bottom: 5px;
+}
+.row input {
+  padding: 6px;
+  border: 1px solid lightblue;
+  border-radius: 5px;
+}
+.row input:focus,
+.row input:active {
+  outline: none;
+  box-shadow: none;
+}
+.row .size_tip {
+  font-size: 12px;
+  margin-left: 10px;
+}
+.row input[type=number] {
+  width: 100px;
+}
+.row span {
+  flex: 0 0 20%;
+}
+.row form {
+  display: flex;
+  justify-content: space-between;
+}
+.label {
+  margin-right: 15px;
+}
+.start {
+  width: 80px;
+  height: 28px;
+  border-radius: 5px;
+  margin: 0 auto;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  outline: none;
+  text-align: center;
+}
+.game_over {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: calc(100vh - 100px);
+  background: rgba(0, 3, 8, 0.9);
+  z-index: 1;
+  color: #fff;
+  text-align: center;
+  line-height: 50px;
+  padding-top: 100px;
+}
+.game_over p {
+  font-size: 48px;
+  color: #f00;
+}
+.btns {
+  display: flex;
+  justify-content: space-around;
+  width: 200px;
+  margin: 0 auto;
+}
+.btns button {
+  width: 80px;
+  height: 28px;
+  border-radius: 5px;
+  margin: 0 auto;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  outline: none;
+  text-align: center;
+  margin-top: 10px;
+}
+.hide {
+  display: none;
+}
+.grid {
+  border: 1px solid #d9d9d9;
+  background: #000;
+  margin: 0 auto;
+  position: relative;
+}
+.snake {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #000;
+}
+.snake.food {
+  background: #f10;
+}
