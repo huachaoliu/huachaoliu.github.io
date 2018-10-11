@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import html2canvas from 'html2canvas';
 import { Button } from 'antd';
 import { getBase64 } from './utils';
-import css from './index.less';
+import css from './cropper.less';
 
 const EMPTY_GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 
