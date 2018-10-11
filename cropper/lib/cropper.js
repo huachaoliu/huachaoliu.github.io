@@ -190,7 +190,6 @@ class Cropper extends React.PureComponent {
           if (l < 0 || t < 0) return;
           w = boxWidth - z;
           h = boxHeight - z;
-          moved = true;
 
           if (w < bw) {
             w = bw;
@@ -208,7 +207,6 @@ class Cropper extends React.PureComponent {
           h = boxHeight + z;
           t -= z;
           if (t < 0 || l + w > rect.width) return;
-          moved = true;
           if (w < bw) {
             w = bw;
             moved = false;
@@ -223,7 +221,6 @@ class Cropper extends React.PureComponent {
           w = boxWidth + z;
           h = boxHeight + z;
           if (l + w > rect.width || t + h > rect.height) return;
-          moved = true;
           if (w < bw) {
             w = bw;
             moved = false;
@@ -239,7 +236,6 @@ class Cropper extends React.PureComponent {
           h = boxHeight + z;
           l -= z;
           if (l < 0 || t + h > rect.height) return;
-          moved = true;
           if (w < bw) {
             w = bw;
             moved = false;
