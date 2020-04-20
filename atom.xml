@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://huachaoliu.github.io</id>
     <title>Gridea</title>
-    <updated>2020-04-20T14:06:30.308Z</updated>
+    <updated>2020-04-20T14:10:58.777Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://huachaoliu.github.io"/>
     <link rel="self" href="https://huachaoliu.github.io/atom.xml"/>
@@ -16,11 +16,11 @@
         <link href="https://huachaoliu.github.io/post/hong-mo-ban-shuang-zhi-cao-zuo-dao-zhi-ye-mian-suo-fang/">
         </link>
         <updated>2020-04-20T13:53:50.000Z</updated>
-        <content type="html"><![CDATA[<p><span style="color:#f23d60;"><strong>操作场景：</strong></span><br>
+        <content type="html"><![CDATA[<p>😩<span style="color:#f23d60;"><strong>操作场景：</strong></span><br>
 我在一个项目中存在pc端鼠标点击移动，和手机端手指点击滑动更新元素位置信息的操作结果在笔记本电脑上，使用触摸板操作时，影响到整个页面的zoom，导致应用无法正常使用。</p>
 <p>使用触摸板双指操作时，会触发wheel事件，双指操作相当于按住了ctrl键后进行鼠标滚轮的操作，结果导致了页面被缩放.</p>
 <p><strong>ps</strong>: 页面已经设置过meta的viewport</p>
-<p><span style="color:#f23d60;"><strong>解决方案：</strong></span><br>
+<p>🤡<span style="color:#f23d60;"><strong>解决方案：</strong></span><br>
 chrome: 监听wheel事件，判断ctrlKey为true时，阻止默认行为</p>
 <pre><code class="language-js">window.addEventLisnter('wheel', function (event) {
     if (event.ctrlKey) {
